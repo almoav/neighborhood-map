@@ -1,11 +1,3 @@
-//console.log(locations[0].name);
-
-var Place = function(data) {
-	this.name = ko.observable(data.name);
-	this.latLng = ko.observable(data.latLng);
-	this.address = ko.observable(data.address);
-};
-
 
 var viewMap = {
 	init: function() {
@@ -18,9 +10,9 @@ var viewMap = {
 	    	mapOptions);
 
 		this.bounds = new google.maps.LatLngBounds();
-		// define a global variable used for closing info windows
-		//this.infoWin;
-
+		this.infowindow = new google.maps.InfoWindow({
+	      content: ''
+		});
 		// start the marker placement
 		this.getPlaces();
 	},
@@ -33,14 +25,12 @@ var viewMap = {
 			var request = {
 		    	query: locations[i].name + " " + locations[i].address
 		  	};
-	  		service.textSearch(request, this.callback);
+	  		service.textSearch(request, this.textCallback);
 		}
 	},
 
-	callback: function(results, status) {
+	textCallback: function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-	    	//return results;
-	    	//console.log(results[0]);
 	    	viewMap.createMarker(results[0]);
 	    }
 	},
@@ -65,19 +55,20 @@ var viewMap = {
 		    //icon: image
 			});
 
-	    var infoWindow = new google.maps.InfoWindow({
-	      content: name
-	    });
-
 	    // marker click listener
 	    google.maps.event.addListener(marker, 'click', function() {
-		    // first close any previously opened info windows
-		    if (viewMap.infoWin) {
-		    	viewMap.infoWin.close();
-		    }
+	    	var url = '';
+	    	if (placeData.photos) {
+	    		url = placeData.photos[0].getUrl({'maxWidth': 300, 'maxHeight': 200});
+	    	}
 
-	    	infoWindow.open(this.map, marker);
-	    	viewMap.infoWin = infoWindow;
+
+	    	viewMap.infowindow.setContent(
+	    		'<h2>' + name + '</h2>' +
+	    		'<img alt="" src="'+url+'">' +
+	    		'<p>' + placeData.formatted_address + '</p>'
+	    		);
+	    	viewMap.infowindow.open(this.map, marker);
 	    });
 
 	    this.bounds.extend(new google.maps.LatLng(lat, lon));
@@ -85,6 +76,12 @@ var viewMap = {
 	    this.map.fitBounds(this.bounds);
 	    // center the map
 	    this.map.setCenter(this.bounds.getCenter());
-		}
+		},
+
+	placeDetails: function(place_id) {
+		var service = new google.maps.places.PlacesService(this.map);
+		service.getDetails(request, callback);
+	}
+
 };
 window.onLoad = viewMap.init();
