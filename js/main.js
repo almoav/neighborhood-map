@@ -1,5 +1,12 @@
 //console.log(locations[0].name);
 
+var Place = function(data) {
+	this.name = ko.observable(data.name);
+	this.latLng = ko.observable(data.latLng);
+	this.address = ko.observable(data.address);
+};
+
+
 var viewMap = {
 	init: function() {
 		var mapOptions = {
@@ -21,26 +28,19 @@ var viewMap = {
 	getPlaces: function() {
 		// find bio locations on the google map
 		var service = new google.maps.places.PlacesService(this.map);
-		//var locations = octopus.getMapLocations();
-		//var locLen = locations.length;
 
 		for (i=0; i<locations.length; i++) {
 			var request = {
-		    	query: locations[i].address
+		    	query: locations[i].name + " " + locations[i].address
 		  	};
-	  		//service.textSearch(request, this.callback);
-	  		service.textSearch(request, this.testfunction(locations[i]));
+	  		service.textSearch(request, this.callback);
 		}
-	},
-
-	testfunction: function(obj, results, status) {
-		console.log(obj);
 	},
 
 	callback: function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			//console.log(results[0]);
-			console.log(this);
+	    	//return results;
+	    	//console.log(results[0]);
 	    	viewMap.createMarker(results[0]);
 	    }
 	},
@@ -49,11 +49,20 @@ var viewMap = {
 	    // places markers on the map
 	    var lat = placeData.geometry.location.lat();
 	    var lon = placeData.geometry.location.lng();
-	    var name = placeData.formatted_address;
+	    var image = {
+	    	url: placeData.icon,
+	    	size: new google.maps.Size(48, 48),
+	    	//origin: new google.maps.Point(12,12),
+	    	//anchor: new google.maps.Point(0, 12),
+	    	scaledSize: new google.maps.Size(24, 24),
+	    };
+	    var name = placeData.name;
+	    //var name = placeData.formatted_address;
 		var marker = new google.maps.Marker({
 		    map: this.map,
 		    position: placeData.geometry.location,
-		    title: name
+		    title: name,
+		    //icon: image
 			});
 
 	    var infoWindow = new google.maps.InfoWindow({
