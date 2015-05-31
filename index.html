@@ -9,9 +9,20 @@
 	<div id="mapView">
 		<h1>DA MAP</h1>
 	</div>
+	<div id="listView">
+		<ul data-bind='foreach: placeList'>
+			<li>
+				<button data-bind='click: $parent.loadPlace, text: $data.name'></button>
+			</li>
+		</ul>
+
+	</div>
 	<script type='text/javascript' src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
     <script type='text/javascript' src='js/libs/knockout.3.3.0.js'></script>
+    <script type='text/javascript' src='js/libs/jquery.min.js'></script>
     <script type='text/javascript' src='js/locations.js'></script>
-    <script type='text/javascript' src="js/main.js"></script>
+    <script type='text/javascript' src="js/AppViewModel.js"></script>
+    <script type='text/javascript' src="js/MapViewModel.js"></script>
+
 </body>
 </html>
