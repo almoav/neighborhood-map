@@ -13,16 +13,19 @@ var AppViewModel = function() {
 	var self = this;
 	this.placeList = ko.observableArray([]);
 
-	locations.forEach(function(placeItem){
+	formattedLocations.forEach(function(placeItem){
 		self.placeList.push( new Place(placeItem) );
+		//MapViewModel.placeMarker(placeItem);
+		MapViewModel.createMarker(placeItem);
 
 	});
+
 
 	this.currentPlace = ko.observable( this.placeList()[0] );
 
 	this.loadPlace = function() {
 		self.currentPlace(this);
-		console.log(self.currentPlace().geocode());
+		console.log(self.currentPlace().name());
 	};
 };
 

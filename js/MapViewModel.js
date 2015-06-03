@@ -1,26 +1,29 @@
-var viewMap = function() {
-	this.init = function() {
+var MapViewModel = {
+	init: function() {
 		var mapOptions = {
 	    	zoom: 8,
 	    	center: new google.maps.LatLng(-34.397, 150.644)
 	  	};
 
-	  	//this.marker = {};
+	  	this.marker = {};
 		this.map = new google.maps.Map(document.getElementById('mapView'),
 	    	mapOptions);
 
 		this.bounds = new google.maps.LatLngBounds();
-
-		/*
 		this.infowindow = new google.maps.InfoWindow({
 	      content: ''
 		});
-		*/
 		// start the marker placement
-		this.getPlaces();
-	};
+		//this.getPlaces();
+		//this.placeMarker();
+	},
 
-	this.getPlaces = function() {
+	placeMarkers: function() {
+		//console.log('foo');
+		//console.log(AppViewModel().placeList()[0]);
+	},
+
+	getPlaces: function() {
 		// find bio locations on the google map
 		var service = new google.maps.places.PlacesService(this.map);
 
@@ -30,31 +33,35 @@ var viewMap = function() {
 		  	};
 	  		service.textSearch(request, this.textCallback);
 		}
-	};
+	},
 
-	this.placeDetails = function(place_id) {
+	placeDetails: function(place_id) {
+		//console.log(marker, place_id);
 		var request = {
 		  placeId: place_id
 		};
 		var service = new google.maps.places.PlacesService(this.map);
 		service.getDetails(request, this.detailsCallback);
-	};
+	},
 
-	this.textCallback = function(results, status) {
+	textCallback: function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-	    	viewMap.createMarker(results[0]);
+	    	MapViewModel.createMarker(results[0]);
+			//console.log(results[0]);
+			//MapViewModel.placeDetails(results[0].place_id);
 	    }
-	};
+	},
 
-	this.detailsCallback = function(results, status) {
+	detailsCallback: function(results, status) {
 		console.log('details callback', status);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			viewMap.setInfowindow(results);
-			//viewMap.infowindow.open(this.map, this.marker);
+			//console.log(results);
+			MapViewModel.setInfowindow(results);
+			//MapViewModel.infowindow.open(this.map, this.marker);
 		}
-	};
+	},
 
-	this.setInfowindow = function(placeData) {
+	setInfowindow: function(placeData) {
     	//console.log(placeData);
     	var url = '';
     	if (placeData.photos) {
@@ -66,7 +73,7 @@ var viewMap = function() {
     		money += "$";
     	}
 
-    	viewMap.infowindow.setContent(
+    	MapViewModel.infowindow.setContent(
     		'<div>' +
     		'<h2>' + placeData.name + '</h2>' +
     		'<img alt="" src="'+url+'">' +
@@ -76,36 +83,30 @@ var viewMap = function() {
     		'</div>'
     	);
 
-    	viewMap.infowindow.open(this.map, this.marker);
+    	MapViewModel.infowindow.open(this.map, this.marker);
 
-	};
+	},
 
-	this.createMarker = function(placeData) {
+	createMarker: function(placeData) {
 	    // places markers on the map
-	    var lat = placeData.geometry.location.lat();
-	    var lon = placeData.geometry.location.lng();
-	    var image = {
-	    	url: placeData.icon,
-	    	size: new google.maps.Size(48, 48),
-	    	scaledSize: new google.maps.Size(24, 24),
-	    };
+	    var lat = placeData.location.lat;
+	    var lon = placeData.location.lng;
 
 	    var name = placeData.name;
-	    //var name = placeData.formatted_address;
-	    var address = placeData.adr_address;
+	    var address = placeData.address;
 
 
 		var marker = new google.maps.Marker({
 		    map: this.map,
-		    position: placeData.geometry.location,
+		    position: placeData.location,
 		    title: name,
 		    //icon: image
 			});
 
 	    // marker click listener
 	    google.maps.event.addListener(marker, 'click', function() {
-	    	viewMap.marker = marker;
-	    	//viewMap.placeDetails(placeData.place_id);
+	    	MapViewModel.marker = marker;
+	    	MapViewModel.placeDetails(placeData.place_id);
 	    });
 
 
@@ -114,8 +115,9 @@ var viewMap = function() {
 	    this.map.fitBounds(this.bounds);
 	    // center the map
 	    this.map.setCenter(this.bounds.getCenter());
-	};
+		},
+
+
+
 };
-
-
-window.onLoad = viewMap.init();
+window.onLoad = MapViewModel.init();
