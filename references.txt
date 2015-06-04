@@ -1,0 +1,4 @@
+// knockout binding with google maps:
+
+http://testasoftware.com/steve/blog/knockout-binding-handler-for-google-maps/
+http://jsfiddle.net/stesta/p3ZT4/
