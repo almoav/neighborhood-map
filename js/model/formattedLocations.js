@@ -84,7 +84,7 @@ var formattedLocations = [
 		"year" :  1919,
 		"location" : {lat: 34.10159400000001, lng: -118.3310311},
 		"place_id" : "ChIJ1QdSJDu_woARaYa9QUkFWK4",
-		"address" : "Hollywood Boulevard, Los Angeles, CA 90028, USA",
+		"address" : "6667 Hollywood Boulevard, Los Angeles, CA 90028, USA",
 		"link" : "http://mussoandfrank.com/history/"
 	},
 	{
@@ -92,7 +92,7 @@ var formattedLocations = [
 		"year" :  1925,
 		"location" : {lat: 34.0904935, lng: -118.3460438},
 		"place_id" : "ChIJjR1j0ym_woARaFZxGSbzjAE",
-		"address" : "West Hollywood Gateway, 7156 Santa Monica Boulevard, West Hollywood, CA 90046, USA",
+		"address" : "7156 Santa Monica Boulevard, West Hollywood, CA 90046, USA",
 		"link" : "http://en.wikipedia.org/wiki/Formosa_Cafe"
 	}
 

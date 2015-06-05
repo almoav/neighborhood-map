@@ -6,9 +6,8 @@
 	<link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div id="mapView">
-		<h1>DA MAP</h1>
-	</div>
+	<div id="mapView" data-bind="googlemap: { locations: placeList, centerLat: 41.48, centerLon: -81.67 }"></div>
+
 	<div id="listView">
 		<ul data-bind='foreach: placeList'>
 			<li>
@@ -23,10 +22,10 @@
     <script type='text/javascript' src='js/libs/knockout.3.3.0.js'></script>
     <script type='text/javascript' src='js/libs/jquery.min.js'></script>
 
-	<!--<script type='text/javascript' src='js/locations.js'></script>-->
-	<script type='text/javascript' src='js/formattedLocations.js'></script>
-    <script type='text/javascript' src="js/MapViewModel.js"></script>
-    <script type='text/javascript' src="js/AppViewModel.js"></script>
+	<!--<script type='text/javascript' src='js/model/locations.js'></script>-->
+	<script type='text/javascript' src='js/model/formattedLocations.js'></script>
+    <!--<script type='text/javascript' src="js/view/MapViewModel.js"></script>))-->
+    <script type='text/javascript' src="js/view/AppViewModel.js"></script>
 
 </body>
 </html>
