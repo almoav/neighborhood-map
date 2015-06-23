@@ -48,7 +48,11 @@ ko.bindingHandlers.googlemap = {
         // center the map
 	    map.fitBounds(bounds);
 	    map.setCenter(bounds.getCenter());
-    }
+    },
+
+	update: function (element, valueAccessor, allBindings, viewModel) {
+		var value = valueAccessor();
+	}
 
 };
 
@@ -68,25 +72,84 @@ AppViewModel = function() {
 	var self = this;
 	this.map = ko.observable();
 	this.infowindow = ko.observable();
+	this.allPlaces = ko.observableArray([]);
 	this.placeList = ko.observableArray([]);
 
-	// build the places array from the static
-	// formattedLocations model
 	formattedLocations.forEach(function(placeItem){
-		self.placeList.push( new Place(placeItem) );
+		self.allPlaces.push( new Place(placeItem) );
 	});
 
 	this.currentPlace = ko.observable( this.placeList()[0] );
 
-	// search bar functionality
-	$("#form-search-field").submit(function(event){
-		event.preventDefault();
 
-		// temp print raw input
+	$("#form-search-field").submit(function(event){
+		/*
+			search bar functionality is invoked with
+			form submit event
+		*/
+		event.preventDefault();
+		self.formatSearch();
+		self.searchPlaces();
+	});
+
+	$("#input-search-reset").click(function(event){
+		event.preventDefault();
+		self.defaultPlaces();
+		self.resetMarkers();
+	});
+
+	this.defaultPlaces = function() {
+		/*
+			build the places array from the static
+			formattedLocations model
+		*/
+		self.placeList(self.allPlaces());
+	};
+
+	this.resetMarkers = function() {
+		/*
+			places the default markers back on the map
+		*/
+
+		// TODO reset the map view to frame markers
+		this.allPlaces().forEach(function(placeItem){
+			placeItem.marker().setMap(self.map());
+		});
+	};
+
+	this.searchPlaces = function() {
+		/*
+			filters the existing list of places using
+			regular expressions
+		*/
+		var tempArray = [];
+		self.placeList().forEach(function(placeItem){
+
+			if ( self.queryRe.test( placeItem.name().toLowerCase() ) ) {
+				// if the place name is a query match
+				tempArray.push(placeItem);
+
+			} else if ( self.queryRe.test( placeItem.address().toLowerCase() ) ) {
+				// if the place address is a query match
+				tempArray.push(placeItem);
+
+			} else {
+				// clear the map marker
+				placeItem.marker().setMap(null);
+			}
+		});
+
+		self.placeList(tempArray);
+		// TODO frame the resulting markers
+	};
+
+	this.formatSearch = function() {
+		// format the temp raw input
 		var query = $("#input-search-field")[0].value.trim().toLowerCase();
 		queryArray = query.split(" ");
 
 		query = "";
+		// use space delineated array as `or` regular patterns
 		queryArray.forEach(function(queryItem) {
 			query += queryItem + '|';
 		});
@@ -94,34 +157,8 @@ AppViewModel = function() {
 		// remove the trailing "|"
 		query = query.slice(0, -1);
 
-		//console.log(query.slice(0, -1));
-
-
-		var queryRe = new RegExp(query);
-		//var queryRe = new RegExp("foo|bar|baz");
-
-		console.log(queryRe);
-
-		//console.log(queryRe.test("foo bar baz"));
-
-
-		self.placeList().forEach(function(place){
-			//console.log(place);
-			//console.log(place.name(), queryRe.test( place.name().toLowerCase() ));
-			//console.log(place.address(), queryRe.test( place.address().toLowerCase() ));
-
-
-			if ( queryRe.test( place.name().toLowerCase() ) ) {
-				console.log(place.name());
-			} else if ( queryRe.test( place.address().toLowerCase() ) ) {
-				console.log(place.address());
-			}
-
-
-		});
-
-	});
-
+		this.queryRe = new RegExp(query);
+	};
 
 	this.loadPlace = function(place) {
 		// I need to be able to pass a `place` observable from
@@ -144,6 +181,9 @@ AppViewModel = function() {
 			);
 		this.infowindow().open(this.map(), this.currentPlace().marker());
 	};
+
+
+	this.defaultPlaces();
 };
 
 ko.applyBindings(new AppViewModel());
