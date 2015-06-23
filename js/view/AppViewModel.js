@@ -7,13 +7,16 @@ ko.bindingHandlers.googlemap = {
     			center: new google.maps.LatLng(value.centerLat, value.centerLon),
     			mapTypeId: google.maps.MapTypeId.ROADMAP
 			},
-    		self = this;
+
     		map = new google.maps.Map(element, mapOptions),
     		bounds = new google.maps.LatLngBounds(),
 			infowindow = new google.maps.InfoWindow();
 
+		// TODO separate the marker placement into an update (perhaps)
+		// to handle changing markers?
+
+		// iteratively place the markers
         value.locations().forEach(function(placeItem){
-        	// place the new marker
 			var marker = new google.maps.Marker({
 			    map: map,
 			    position: placeItem.location(),
@@ -75,6 +78,51 @@ AppViewModel = function() {
 
 	this.currentPlace = ko.observable( this.placeList()[0] );
 
+	// search bar functionality
+	$("#form-search-field").submit(function(event){
+		event.preventDefault();
+
+		// temp print raw input
+		var query = $("#input-search-field")[0].value.trim().toLowerCase();
+		queryArray = query.split(" ");
+
+		query = "";
+		queryArray.forEach(function(queryItem) {
+			query += queryItem + '|';
+		});
+
+		// remove the trailing "|"
+		query = query.slice(0, -1);
+
+		//console.log(query.slice(0, -1));
+
+
+		var queryRe = new RegExp(query);
+		//var queryRe = new RegExp("foo|bar|baz");
+
+		console.log(queryRe);
+
+		//console.log(queryRe.test("foo bar baz"));
+
+
+		self.placeList().forEach(function(place){
+			//console.log(place);
+			//console.log(place.name(), queryRe.test( place.name().toLowerCase() ));
+			//console.log(place.address(), queryRe.test( place.address().toLowerCase() ));
+
+
+			if ( queryRe.test( place.name().toLowerCase() ) ) {
+				console.log(place.name());
+			} else if ( queryRe.test( place.address().toLowerCase() ) ) {
+				console.log(place.address());
+			}
+
+
+		});
+
+	});
+
+
 	this.loadPlace = function(place) {
 		// I need to be able to pass a `place` observable from
 		// a map marker click event, `this` evaluates to the
@@ -90,7 +138,8 @@ AppViewModel = function() {
 
 	this.openInfowin = function() {
 		this.infowindow().setContent(
-			'<h2>' + this.currentPlace().name() + '</h2>' +
+			'<h2>' + this.currentPlace().name() + ' - ' +
+			this.currentPlace().year() + '</h2>' +
 			'<p>' + this.currentPlace().address() + '</p>'
 			);
 		this.infowindow().open(this.map(), this.currentPlace().marker());

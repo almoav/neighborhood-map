@@ -1,7 +1,8 @@
 #mapView {
-  height: 600px;
-  width: 98%;
-  margin-left: auto;
+  height: 500px;
+  width: 100%;
+  /*margin-left: auto;
   margin-right: auto;
+  */
   padding-bottom: 5%;
 }
