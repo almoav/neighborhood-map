@@ -50,10 +50,6 @@ ko.bindingHandlers.googlemap = {
 	    map.setCenter(bounds.getCenter());
     },
 
-	update: function (element, valueAccessor, allBindings, viewModel) {
-		var value = valueAccessor();
-	}
-
 };
 
 
@@ -75,6 +71,7 @@ AppViewModel = function() {
 	this.allPlaces = ko.observableArray([]);
 	this.placeList = ko.observableArray([]);
 
+	// this is the default locations
 	formattedLocations.forEach(function(placeItem){
 		self.allPlaces.push( new Place(placeItem) );
 	});
@@ -93,6 +90,9 @@ AppViewModel = function() {
 	});
 
 	$("#input-search-reset").click(function(event){
+		/*
+			resets the search filter
+		*/
 		event.preventDefault();
 		self.defaultPlaces();
 		self.resetMarkers();
