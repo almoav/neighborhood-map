@@ -71,7 +71,7 @@ AppViewModel = function() {
 	this.allPlaces = ko.observableArray([]);
 	this.placeList = ko.observableArray([]);
 
-	// this is the default locations
+	// initialize the default locations
 	formattedLocations.forEach(function(placeItem){
 		self.allPlaces.push( new Place(placeItem) );
 	});
@@ -170,6 +170,9 @@ AppViewModel = function() {
 	};
 
 	this.printPlace = function() {
+		/*
+			debugging function to test data bind
+		*/
 		console.log(self.currentPlace().name(), self.currentPlace().year());
 	};
 
@@ -182,7 +185,7 @@ AppViewModel = function() {
 		this.infowindow().open(this.map(), this.currentPlace().marker());
 	};
 
-
+	// after everything is initialized load the default places
 	this.defaultPlaces();
 };
 
