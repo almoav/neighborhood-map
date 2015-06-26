@@ -11,6 +11,7 @@ ko.bindingHandlers.googlemap = {
     		map = new google.maps.Map(element, mapOptions),
     		bounds = new google.maps.LatLngBounds(),
 			infowindow = new google.maps.InfoWindow();
+			infowindow.setContent($('#placeTmpl')[0]);
 
 		// TODO separate the marker placement into an update (perhaps)
 		// to handle changing markers?
@@ -30,21 +31,29 @@ ko.bindingHandlers.googlemap = {
 			viewModel.map(map);
 			viewModel.infowindow(infowindow);
 
+			// save a reference to the info window div
+			var $node = $('#placeTmpl');
+
 			// add the marker click event
 			google.maps.event.addListener(marker, 'click', function() {
 	    		// set the current place from here because we
 	    		// have the place observable
 
 	    		//TODO replace viewModel with bindingsContext.$data
+	    		//$('#placeTmpl')[0].style.visibility = "visible";
 	    		viewModel.loadPlace(placeItem);
+	    		viewModel.showPlaceTempl();
 	    	});
 
-			var $node = $('#placeTmpl');
+
 
 			google.maps.event.addListener(infowindow, "closeclick", function() {
 			    //google maps will destroy this node and knockout will stop updating it
 			    //add it back to the body so knockout will take care of it
+			    //$('#placeTmpl')[0].style.visibility = "hidden";
 			    $("body").append($node);
+			    viewModel.hidePlaceTempl();
+
 			});
 
 
@@ -60,8 +69,6 @@ ko.bindingHandlers.googlemap = {
     },
 
 };
-
-
 
 
 
@@ -104,14 +111,16 @@ PlaceInfo = function() {
 AppViewModel = function() {
 	var self = this;
 
-	this.values = ko.observable([10, 100]);
-
+	// the google map object
 	this.map = ko.observable();
+
+	// the map's info window and corresponding place info
 	this.infowindow = ko.observable();
 	this.placeInfo = ko.observable(new PlaceInfo());
+
+	// save a list of all places as well as currently displayed places list
 	this.allPlaces = ko.observableArray([]);
 	this.placeList = ko.observableArray([]);
-
 
 
 	// initialize the default locations
@@ -137,6 +146,7 @@ AppViewModel = function() {
 			resets the search filter
 		*/
 		event.preventDefault();
+		$("#input-search-field").val("");
 		self.defaultPlaces();
 		self.resetMarkers();
 	});
@@ -187,6 +197,10 @@ AppViewModel = function() {
 	};
 
 	this.formatSearch = function() {
+		/*
+			produces a usable regular expression from the search input
+		*/
+
 		// format the temp raw input
 		var query = $("#input-search-field")[0].value.trim().toLowerCase();
 		queryArray = query.split(" ");
@@ -204,20 +218,24 @@ AppViewModel = function() {
 	};
 
 	this.loadPlace = function(place) {
-		// I need to be able to pass a `place` observable from
-		// a map marker click event, `this` evaluates to the
-		// observable when called from the data-bind
+		/*
+			I need to be able to pass a `place` observable from
+			a map marker click event, `this` evaluates to the
+			observable when called from the data-bind
+		*/
 		if (!place) {place = this;}
+
+
+		// selection actions
+		self.clearInfoWindowContents();
 		self.currentPlace(place);
 		self.yelpRequest(place);
 		self.openInfowin();
-		//self.placeInfo('{"name": "' + self.currentPlace().name()+ '"}');
 
+		// load place info based on current selected place
 		self.placeInfo().name(self.currentPlace().name());
 		self.placeInfo().year(self.currentPlace().year());
 		self.placeInfo().address(self.currentPlace().address());
-		//self.getYelp(place);
-		//self.openInfowin();
 	};
 
 
@@ -267,7 +285,6 @@ AppViewModel = function() {
         OAuth.SignatureMethod.sign(message, accessor);
 
         var parameterMap = OAuth.getParameterMap(message.parameters);
-        //console.log(parameterMap);
 
         $.ajax({
             'url' : message.action,
@@ -277,22 +294,33 @@ AppViewModel = function() {
             'success' : function(data, textStats, XMLHttpRequest) {
                 result = data.businesses[0];
 
-                // save this result somewhere
+                // update the place info with the returned result
                 self.setInfoWindowContents(result);
             }
         });
 	};
 
+	this.clearInfoWindowContents = function() {
+		/*
+			sets api dependent info to blank while waiting for a response
+		*/
+		this.placeInfo().addressItems("");
+		this.placeInfo().yelpRatingImg("");
+		this.placeInfo().phone("");
+		this.placeInfo().yelpRating("");
+		this.placeInfo().yelpRatingImg("");
+		this.placeInfo().yelpReviewCount("");
+		this.placeInfo().yelpPic("");
+		this.placeInfo().yelpUrl("");
+
+	};
 
 	this.setInfoWindowContents = function(data) {
-		console.log(data);
-
-
-
-		for(i=0; i<data.location.display_address.length; i++){
-			console.log(data.location.display_address[i]);
-		}
-
+		/*
+			update the corresponding place info using the returned
+			Yelp api call
+		*/
+		//console.log(data);
 		this.placeInfo().addressItems(data.location.display_address);
 		this.placeInfo().yelpRatingImg(data.rating_img_url);
 		this.placeInfo().phone(data.display_phone);
@@ -305,13 +333,28 @@ AppViewModel = function() {
 	};
 
 	this.openInfowin = function() {
-		// TODO: move the setContent to infowindow creation
-		this.infowindow().setContent($('#placeTmpl')[0]);
 		this.infowindow().open(this.map(), this.currentPlace().marker());
 	};
 
+	this.hidePlaceTempl = function() {
+		/*
+			when the placeTempl div is part of the body we don't want to
+			see it, only when it is attached to the info window
+		*/
+		//$('#placeTmpl')[0].style.visibility = "hidden";
+		$('#placeTmpl')[0].style.display = "none";
+	};
+
+	this.showPlaceTempl = function() {
+		$('#placeTmpl')[0].style.display = "initial";
+		//$('#placeTmpl')[0].style.visibility = "visible";
+	};
+
+
+
 	// after everything is initialized load the default places
 	this.defaultPlaces();
+	this.hidePlaceTempl();
 };
 
 ko.applyBindings(new AppViewModel());
