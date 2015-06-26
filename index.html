@@ -17,6 +17,30 @@
 	</form>
 	<div id="mapView" data-bind="googlemap: { locations: placeList, centerLat: 41.48, centerLon: -81.67 }"></div>
 
+	<div id="placeTmpl" data-bind="with: placeInfo">
+
+        <b></button><span data-bind="text: name"></span></b>
+        <span data-bind="text: year"></span><br>
+		<img data-bind="attr: {src: yelpRatingImg, alt: 'rating'}">
+		<img data-bind="attr: {src: yelpLogo, alt: 'yelp logo'}"><br>
+		<span data-bind="text: yelpReviews"></span>
+		<a data-bind="attr: {href: yelpUrl}">more...</a><br>
+		<img data-bind="attr: {src: yelpPic, alt: 'image of the place'}"><br>
+		<!--<span data-bind="text: address"></span><br>-->
+		<ul data-bind="foreach: addressItems">
+			<li>
+				<span data-bind="text: $data"></span>
+			</li>
+		</ul>
+		<span data-bind="text: phone"></span>
+
+		<!--<img src="'+yelp+'" alt="powered by Yelp"><br>
+		<span><b>'+rating+'</b> '+count+' reviews</span></br>
+		<a href='+url+'>'+count+' reviews</a></br>
+		<img src="'+pic+'" alt="location picture"><br>
+		<span>'+address+'<br>'+phone+'</span><br>-->
+	</div>
+
 	<div id="listView">
 		<ul data-bind='foreach: placeList'>
 			<li>
@@ -25,11 +49,7 @@
 		</ul>
 	</div>
 
-	<div id="placeTmpl" data-bind="with: currentPlace">
-        <h3>
-            <span data-bind="text: name"></span>
-        </h3>
-	</div>
+
 
 	<script type='text/javascript' src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
     <script type='text/javascript' src='js/libs/knockout.3.3.0.js'></script>

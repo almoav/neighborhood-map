@@ -87,11 +87,14 @@ PlaceInfo = function() {
 	this.name = ko.observable();
 	this.year = ko.observable();
 	this.address = ko.observable();
+	this.addressItems = ko.observableArray([]);
 	this.phone = ko.observable();
 	this.yelpRating = ko.observable();
 	this.yelpRatingImg = ko.observable();
 	this.yelpReviewCount = ko.observable();
-	this.yelpReviewImg = ko.observable();
+	this.yelpReviews = ko.computed(function() {
+		return self.yelpReviewCount() + " reviews";
+	});
 	this.yelpPic = ko.observable();
 	this.yelpUrl = ko.observable();
 	this.yelpLogo = "https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/55e2efe681ed/assets/img/yelp_logo_50x25.png";
@@ -207,12 +210,12 @@ AppViewModel = function() {
 		if (!place) {place = this;}
 		self.currentPlace(place);
 		self.yelpRequest(place);
-		this.openInfowin();
+		self.openInfowin();
 		//self.placeInfo('{"name": "' + self.currentPlace().name()+ '"}');
 
-		//self.placeInfo().name(self.currentPlace().name());
-		//self.placeInfo().year(self.currentPlace().year());
-		//self.placeInfo().address(self.currentPlace().address());
+		self.placeInfo().name(self.currentPlace().name());
+		self.placeInfo().year(self.currentPlace().year());
+		self.placeInfo().address(self.currentPlace().address());
 		//self.getYelp(place);
 		//self.openInfowin();
 	};
@@ -284,32 +287,20 @@ AppViewModel = function() {
 	this.setInfoWindowContents = function(data) {
 		console.log(data);
 
-		/*
-		var name = this.placeInfo().name();
-		var year = this.placeInfo().year();
-		var address = this.placeInfo().address();
-		var phone = this.placeInfo().phone();
-		var rating = this.placeInfo().yelpRating();
-		var count = this.placeInfo().yelpReviewCount();
-		var ratingImg = this.placeInfo().yelpRatingImg();
-		var pic = this.placeInfo().yelpPic();
-		var url = this.placeInfo().yelpUrl();
-		var yelp = this.placeInfo().yelpLogo();
-
-		// TODO can ko data-bind work here?
-		this.infowindow().setContent(
-			'<b><span>'+name+'</b> ['+year+']</span><br>'+
-			'<img src="'+ratingImg+'" alt="rating">'+
-			'<img src="'+yelp+'" alt="powered by Yelp"><br>'+
-			//'<span><b>'+rating+'</b> '+count+' reviews</span></br>'+
-			'<a href='+url+'>'+count+' reviews</a></br>'+
-			'<img src="'+pic+'" alt="location picture"><br>'+
-			'<span>'+address+'<br>'+phone+'</span><br>'
 
 
+		for(i=0; i<data.location.display_address.length; i++){
+			console.log(data.location.display_address[i]);
+		}
 
-		);
-		*/
+		this.placeInfo().addressItems(data.location.display_address);
+		this.placeInfo().yelpRatingImg(data.rating_img_url);
+		this.placeInfo().phone(data.display_phone);
+		this.placeInfo().yelpRating(data.rating);
+		this.placeInfo().yelpRatingImg(data.rating_img_url);
+		this.placeInfo().yelpReviewCount(data.review_count);
+		this.placeInfo().yelpPic(data.image_url);
+		this.placeInfo().yelpUrl(data.url);
 
 	};
 
