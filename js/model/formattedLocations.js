@@ -1,3 +1,5 @@
+// master list scraped from The LA Beat:
+// http://thelosangelesbeat.com/2015/05/offbeat-l-a-the-oldest-surviving-los-angeles-restaurants-a-master-list-of-the-vintage-historic-and-old-school/
 var formattedLocations = [
 {"name":"Fair Oaks Pharmacy & Soda Fountain","year":1905,"location":{lat:34.1160867, lng:-118.1505986},"place_id":"ChIJc7-nM4zEwoARM9rL4WPU3Bg","address":"1526 Mission Street, South Pasadena, CA 91030, USA","link":"http://www.scvhistory.com/scvhistory/sauguscafe.html"},
 {"name":"Watson Drugs & Soda Fountain","year":1915,"location":{lat:33.7876539, lng:-117.8523009},"place_id":"ChIJVRxPBefZ3IAR4JJ0yIHn7FM","address":"116 East Chapman Avenue, Orange, CA 92866, USA","link":"http://www.watsonsdrugs.com/history.htm"},
@@ -195,7 +197,7 @@ var formattedLocations = [
 {"name":"Way Station Coffee House","year":1971,"location":{"lat":34.3803538,"lng":-118.5293929},"place_id":"ChIJBWuyaGGGwoARPzNaPDIcaOE","address":"24377 Main Street, Newhall, CA 91321, USA","link":"http://www.signalscv.com/archives/33438/"},
 {"name":"Benihana","year":1971,"location":{"lat":34.066216,"lng":-118.375896},"place_id":"ChIJy4_EUU-5woARbtzlLfJn2ZA","address":"38 North La Cienega Boulevard, Beverly Hills, CA 90211, USA","link":"http://www.yelp.com/biz/benihana-beverly-hills"},
 {"name":"Howard's Famous Bacon & Avocado Burgers","year":1971,"location":{"lat":34.0137218,"lng":-118.4164603},"place_id":"ChIJqXbQ9ke6woARBT3Rfdo1DfU","address":"11127 Venice Boulevard, Los Angeles, CA 90034, USA","link":"http://aht.seriouseats.com/archives/2005/06/almost-famous-h.html"},
-{"name":"O0masa","year":1972,"location":{"lat":34.0492265,"lng":-118.2396326},"place_id":"ChIJLdK4iUfGwoARlJuHYrMNoJU","address":"100 Japanese Village Plaza Mall, Los Angeles, CA 90012, USA","link":"http://www.ladowntownnews.com/oomasa/article_2725f49e-d316-11e4-9d62-63fbd483e775.html"},
+{"name":"Oomasa","year":1972,"location":{"lat":34.0492265,"lng":-118.2396326},"place_id":"ChIJLdK4iUfGwoARlJuHYrMNoJU","address":"100 Japanese Village Plaza Mall, Los Angeles, CA 90012, USA","link":"http://www.ladowntownnews.com/oomasa/article_2725f49e-d316-11e4-9d62-63fbd483e775.html"},
 {"name":"Le Sanglier","year":1970,"location":{"lat":34.1710575,"lng":-118.5428207},"place_id":"ChIJKWXwbg6ZwoAREi7DJ5Yq8_4","address":"5522 Crebs Avenue, Tarzana, CA 91356, USA","link":"http://www.lesanglierrestaurant.com/aboutus/"},
 {"name":"Gardens of Taxco","year":1971,"location":{"lat":34.09116059999999,"lng":-118.3691134},"place_id":"ChIJ9XVgZMe-woARMlYSNERaf7Y","address":"1113 North Harper Avenue, West Hollywood, CA 90046, USA","link":"http://thegardensoftaxco.com/"},
 {"name":"La Frite","year":1972,"location":{"lat":34.1529893,"lng":-118.460119},"place_id":"ChIJ08BedcGXwoARYfPe0OMVUOs","address":"15013 Ventura Boulevard, Sherman Oaks, CA 91403, USA","link":"http://lafritecafe.com/About_Us.html"},

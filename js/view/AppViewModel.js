@@ -39,6 +39,15 @@ ko.bindingHandlers.googlemap = {
 	    		viewModel.loadPlace(placeItem);
 	    	});
 
+			var $node = $('#placeTmpl');
+
+			google.maps.event.addListener(infowindow, "closeclick", function() {
+			    //google maps will destroy this node and knockout will stop updating it
+			    //add it back to the body so knockout will take care of it
+			    $("body").append($node);
+			});
+
+
 			// focus the map around the existing markers
 	    	var lat = placeItem.location().lat;
 	    	var lng = placeItem.location().lng;
@@ -57,6 +66,10 @@ ko.bindingHandlers.googlemap = {
 
 
 Place = function(data) {
+	/*
+		stores map information for each of the entries in the
+		master locations list
+	*/
 	var self = this;
 	this.name = ko.observable(data.name);
 	this.year = ko.observable(data.year);
@@ -66,6 +79,24 @@ Place = function(data) {
 	this.marker = ko.observable();
 };
 
+PlaceInfo = function() {
+	/*
+		this single object stores asynchronous ajax injections
+	*/
+	var self = this;
+	this.name = ko.observable();
+	this.year = ko.observable();
+	this.address = ko.observable();
+	this.phone = ko.observable();
+	this.yelpRating = ko.observable();
+	this.yelpRatingImg = ko.observable();
+	this.yelpReviewCount = ko.observable();
+	this.yelpReviewImg = ko.observable();
+	this.yelpPic = ko.observable();
+	this.yelpUrl = ko.observable();
+	this.yelpLogo = "https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/55e2efe681ed/assets/img/yelp_logo_50x25.png";
+
+};
 
 AppViewModel = function() {
 	var self = this;
@@ -74,6 +105,7 @@ AppViewModel = function() {
 
 	this.map = ko.observable();
 	this.infowindow = ko.observable();
+	this.placeInfo = ko.observable(new PlaceInfo());
 	this.allPlaces = ko.observableArray([]);
 	this.placeList = ko.observableArray([]);
 
@@ -175,12 +207,22 @@ AppViewModel = function() {
 		if (!place) {place = this;}
 		self.currentPlace(place);
 		self.yelpRequest(place);
+		this.openInfowin();
+		//self.placeInfo('{"name": "' + self.currentPlace().name()+ '"}');
+
+		//self.placeInfo().name(self.currentPlace().name());
+		//self.placeInfo().year(self.currentPlace().year());
+		//self.placeInfo().address(self.currentPlace().address());
 		//self.getYelp(place);
-		self.openInfowin();
+		//self.openInfowin();
 	};
 
 
 	this.yelpRequest = function(place) {
+        /*
+			example taken from user Prem on the Yelp Developer Support Google Group
+        	https://groups.google.com/d/msg/yelp-developer-support/5bDrWXWJsqY/Lq8LuEUcwV8J
+		*/
         var auth = {
             //
             // Update with your auth tokens.
@@ -222,7 +264,7 @@ AppViewModel = function() {
         OAuth.SignatureMethod.sign(message, accessor);
 
         var parameterMap = OAuth.getParameterMap(message.parameters);
-        console.log(parameterMap);
+        //console.log(parameterMap);
 
         $.ajax({
             'url' : message.action,
@@ -230,26 +272,50 @@ AppViewModel = function() {
             'dataType' : 'jsonp',
             'jsonpCallback' : 'cb',
             'success' : function(data, textStats, XMLHttpRequest) {
-                console.log(data);
-                //$("body").append(output);
+                result = data.businesses[0];
+
+                // save this result somewhere
+                self.setInfoWindowContents(result);
             }
         });
 	};
 
 
-	this.printPlace = function() {
+	this.setInfoWindowContents = function(data) {
+		console.log(data);
+
 		/*
-			debugging function to test data bind
+		var name = this.placeInfo().name();
+		var year = this.placeInfo().year();
+		var address = this.placeInfo().address();
+		var phone = this.placeInfo().phone();
+		var rating = this.placeInfo().yelpRating();
+		var count = this.placeInfo().yelpReviewCount();
+		var ratingImg = this.placeInfo().yelpRatingImg();
+		var pic = this.placeInfo().yelpPic();
+		var url = this.placeInfo().yelpUrl();
+		var yelp = this.placeInfo().yelpLogo();
+
+		// TODO can ko data-bind work here?
+		this.infowindow().setContent(
+			'<b><span>'+name+'</b> ['+year+']</span><br>'+
+			'<img src="'+ratingImg+'" alt="rating">'+
+			'<img src="'+yelp+'" alt="powered by Yelp"><br>'+
+			//'<span><b>'+rating+'</b> '+count+' reviews</span></br>'+
+			'<a href='+url+'>'+count+' reviews</a></br>'+
+			'<img src="'+pic+'" alt="location picture"><br>'+
+			'<span>'+address+'<br>'+phone+'</span><br>'
+
+
+
+		);
 		*/
-		console.log(self.currentPlace().name(), self.currentPlace().year());
+
 	};
 
 	this.openInfowin = function() {
-		this.infowindow().setContent(
-			'<h2>' + this.currentPlace().name() + ' - ' +
-			this.currentPlace().year() + '</h2>' +
-			'<p>' + this.currentPlace().address() + '</p>'
-			);
+		// TODO: move the setContent to infowindow creation
+		this.infowindow().setContent($('#placeTmpl')[0]);
 		this.infowindow().open(this.map(), this.currentPlace().marker());
 	};
 

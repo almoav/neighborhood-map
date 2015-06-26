@@ -6,8 +6,8 @@
 	<link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<h1>Old Food:</h1>
-	<h2>the oldest standing restaurants in the greater LA area</h2>
+	<h1>Leftovers:</h1>
+	<h2>the oldest restaurants in the greater LA area</h2>
 	<form id="form-search-field">
 		<h4>filter by name, city, zip</h4>
 
@@ -24,6 +24,13 @@
 			</li>
 		</ul>
 	</div>
+
+	<div id="placeTmpl" data-bind="with: currentPlace">
+        <h3>
+            <span data-bind="text: name"></span>
+        </h3>
+	</div>
+
 	<script type='text/javascript' src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
     <script type='text/javascript' src='js/libs/knockout.3.3.0.js'></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
