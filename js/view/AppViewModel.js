@@ -169,6 +169,7 @@ PlaceInfo = function() {
 	this.yelpPic = ko.observable();
 	this.yelpUrl = ko.observable();
 	this.yelpLogo = "https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/55e2efe681ed/assets/img/yelp_logo_50x25.png";
+	this.flickrPics = ko.observableArray([]);
 
 };
 
@@ -294,6 +295,8 @@ AppViewModel = function() {
 		self.clearInfoWindowContents();
 		self.currentPlace(place);
 		self.yelpRequest(place);
+		//self.wikiRequest(place);
+		self.flickrRequest(place);
 		self.openInfowin();
 		self.showPlaceTempl();
 
@@ -358,12 +361,91 @@ AppViewModel = function() {
             'jsonpCallback' : 'cb',
             'success' : function(data, textStats, XMLHttpRequest) {
                 result = data.businesses[0];
-
-                // update the place info with the returned result
-                self.setInfoWindowContents(result);
+                self.injectYelpResult(result);
             }
         });
 	};
+
+
+	this.flickrRequest = function(place) {
+		var endpoint = "https://api.flickr.com/services/rest/?";
+		var key = "3e3c69be991d3241319ef92adac0855e";
+		var secret = "964e876111b73fdd";
+		var method = "&method=flickr.photos.search";
+		//var method = "&method=flickr.photosets.getPhotos";
+		var query = "&text=" + place.name();
+		var format = "&format=json";
+		var number = "&per_page=4";
+		var requestUrl = endpoint + method + query + "&api_key=" + key + number + format;
+
+		//console.log(requestUrl);
+		$.ajax({
+			url: requestUrl,
+			type: "GET",
+			cache: true,
+			dataType: "jsonp",
+			jsonp: "jsoncallback",
+			success: function(result) {
+				self.parseFlickrPhotos(result);
+			}
+		});
+	};
+
+	this.parseFlickrPhotos = function(response) {
+		/*
+			takes the Flickr api response and updates the data bind with
+			the corresponding image url array
+		*/
+
+		if (response.stat != "ok") {
+			console.log("error retriving Flickr respose");
+			console.log(response);
+			return 1;
+		}
+
+		var photoJsonArray = response.photos.photo;
+		var photoUrlArray = [];
+
+		for(i=0; i<photoJsonArray.length; i++) {
+			var farm = photoJsonArray[i].farm;
+			var id = photoJsonArray[i].id;
+			var owner =  photoJsonArray[i].owner;
+			var secret = photoJsonArray[i].secret;
+			var server = photoJsonArray[i].server;
+
+			//var picUrl = "http://www.flickr.com/photos/"+owner+"/"+id+"/";
+			var picUrl = "https://farm"+farm+".staticflickr.com/"+server+"/"+id+"_"+secret+"_q.jpg";
+
+
+			photoUrlArray.push(picUrl);
+		}
+
+		// send the resulting image urls to the data bind
+		self.placeInfo().flickrPics(photoUrlArray);
+	};
+
+
+	this.wikiRequest = function(place) {
+		/*
+			request a wiki article
+		*/
+		var remoteUrlWithOrigin = "https://en.wikipedia.org/w/api.php?" +
+			"action=opensearch&search="+place.name()+"&format=json&callback=wikiCallback";
+		//var queryData = "";
+
+		$.ajax( {
+		    url: remoteUrlWithOrigin,
+		    //data: queryData,
+		    dataType: 'jsonp',
+		    //type: 'POST',
+		    //headers: { 'Api-User-Agent': 'Example/1.0' },
+		    success: function(data) {
+		       // do something with data
+		       console.log(data);
+		    }
+		} );
+	};
+
 
 	this.clearInfoWindowContents = function() {
 		/*
@@ -380,7 +462,7 @@ AppViewModel = function() {
 
 	};
 
-	this.setInfoWindowContents = function(data) {
+	this.injectYelpResult = function(data) {
 		/*
 			update the corresponding place info using the returned
 			Yelp api call

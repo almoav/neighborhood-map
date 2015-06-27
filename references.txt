@@ -6,3 +6,7 @@ http://jsfiddle.net/stesta/p3ZT4/
 // adding ko databind to google maps infoWindow:
 
 https://stackoverflow.com/questions/15317796/knockout-loses-bindings-when-google-maps-api-v3-info-window-is-closed/25274909#25274909?s=f569aaed122342ee9d78dd5a6548ee28
+
+// working with flickr json response
+http://stackoverflow.com/questions/22945503/jsonp-issue-with-flickrapi-uncaught-referenceerror-jsonflickrapi-is-not-define
+http://kylerush.net/blog/flickr-api/

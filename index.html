@@ -58,7 +58,13 @@
 				<span data-bind="text: $data"></span>
 			</li>
 		</ul>
-		<span data-bind="text: phone"></span>
+		<span data-bind="text: phone"></span><br>
+
+		<ul data-bind="foreach: flickrPics">
+			<li>
+				<img data-bind="attr: {src: $data, alt: $data}">
+			</li>
+		</ul>
 	</div>
 
 	<!--
