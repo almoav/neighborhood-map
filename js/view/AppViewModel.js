@@ -26,6 +26,7 @@ ko.bindingHandlers.googlemap = {
 
 			// save this marker and map to the place observable
 			placeItem.marker(marker);
+			placeItem.markerStyle();
 
 			// save the map and infowindow to the viewModel
 			viewModel.map(map);
@@ -46,14 +47,12 @@ ko.bindingHandlers.googlemap = {
 	    	});
 
 
-
 			google.maps.event.addListener(infowindow, "closeclick", function() {
 			    //google maps will destroy this node and knockout will stop updating it
 			    //add it back to the body so knockout will take care of it
 			    //$('#placeTmpl')[0].style.visibility = "hidden";
 			    $("body").append($node);
 			    viewModel.hidePlaceTempl();
-
 			});
 
 
@@ -66,8 +65,20 @@ ko.bindingHandlers.googlemap = {
         // center the map
 	    map.fitBounds(bounds);
 	    map.setCenter(bounds.getCenter());
-    },
 
+		// Add a basic style.
+		map.data.setStyle(function(feature) {
+			return /** @type {google.maps.Data.StyleOptions} */({
+				icon: {
+					path: google.maps.SymbolPath.CIRCLE,
+					scale: 10,
+					fillColor: '#f00',
+					fillOpacity: 0.35,
+					strokeWeight: 0
+				}
+			});
+		});
+    },
 };
 
 
@@ -84,6 +95,59 @@ Place = function(data) {
 	this.location = ko.observable(data.location);
 	this.place_id = ko.observable(data.place_id);
 	this.marker = ko.observable();
+
+	this.markerStyle = function() {
+		/*
+			styles the marker symbol color based on place age
+		*/
+		var old = [212, 100, 20];
+		var young = [212, 100, 80];
+
+		// these are hardcoded from the locations list
+		var earlierYear = 1905;
+		var laterYear = 1991;
+
+		// calculate normalized age
+		var blend = (Math.min(this.year(), laterYear) - earlierYear) / (laterYear - earlierYear);
+
+		// I want to reshape the curve to account for the heavily "younger" sample
+		blend = Math.pow(blend, 1.5);
+
+		// save this normalized age for styling effects
+		this.age = Math.max(1-blend, 0.25);
+
+		// calculate color
+		var color = this.interpolateHsl(old, young, blend);
+
+		// feed color to symbol
+		this.makeSymbol(color);
+	};
+
+	this.interpolateHsl = function(lowHsl, highHsl, fraction) {
+		var color = [];
+		for (var i = 0; i < 3; i++) {
+			// Calculate color based on the fraction.
+			color[i] = (highHsl[i] - lowHsl[i]) * fraction + lowHsl[i];
+		}
+
+		return 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)';
+	};
+
+	this.makeSymbol = function(color) {
+ 		/*
+ 			make a custom marker symbol
+ 		*/
+ 		var icon = {
+ 			path: google.maps.SymbolPath.CIRCLE,
+ 			scale: 3 + 8 * this.age,
+ 			strokeColor: "black",
+ 			strokeOpacity: 0.9,
+ 			strokeWeight: 1,
+ 			fillColor: color,
+ 			fillOpacity: 0.8 * this.age,
+ 		};
+ 		this.marker().setIcon(icon);
+	};
 };
 
 PlaceInfo = function() {

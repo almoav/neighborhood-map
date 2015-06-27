@@ -269,19 +269,4 @@ var formattedLocations = [
 {"name":"Clearman's Northwoods Inn","year":1989,"location":{"lat":33.8833391,"lng":-118.0264702},"place_id":"ChIJt9989oQs3YARK05iuY5Iy9Y","address":"14305 Firestone Boulevard, La Mirada, CA 90638, USA","link":"http://clearmansrestaurants.com/north-woods-la-mirada/"},
 {"name":"Ports 'O Call Restaurant","year":1961,"location":{"lat":33.7318135,"lng":-118.2765596},"place_id":"EikxMjAwIE5hZ295YSBXYXksIFNhbiBQZWRybywgQ0EgOTA3MzEsIFVTQQ","address":"1200 Nagoya Way, San Pedro, CA 90731, USA","link":"http://www.yelp.com/biz/ports-o-call-waterfront-dining-san-pedro-2"},
 {"name":"Little Toni's","year":1956,"location":{"lat":34.1567701,"lng":-118.3700702},"place_id":"ChIJzzdtgh--woARVNBZRuX_8F8","address":"4745 Lankershim Boulevard, North Hollywood, CA 91602, USA","link":"http://www.yelp.com/biz/little-tonis-north-hollywood"},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ];
