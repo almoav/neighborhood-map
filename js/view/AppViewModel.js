@@ -42,7 +42,7 @@ ko.bindingHandlers.googlemap = {
 	    		//TODO replace viewModel with bindingsContext.$data
 	    		//$('#placeTmpl')[0].style.visibility = "visible";
 	    		viewModel.loadPlace(placeItem);
-	    		viewModel.showPlaceTempl();
+	    		//viewModel.showPlaceTempl();
 	    	});
 
 
@@ -219,18 +219,19 @@ AppViewModel = function() {
 
 	this.loadPlace = function(place) {
 		/*
-			I need to be able to pass a `place` observable from
-			a map marker click event, `this` evaluates to the
-			observable when called from the data-bind
+			sets the currently selected place when called from either a list
+			entry or google map marker click
 		*/
+		// `place` paramater is passed from a marker click event,
+		// otherwise `this` evaluates to the bound list item
 		if (!place) {place = this;}
-
 
 		// selection actions
 		self.clearInfoWindowContents();
 		self.currentPlace(place);
 		self.yelpRequest(place);
 		self.openInfowin();
+		self.showPlaceTempl();
 
 		// load place info based on current selected place
 		self.placeInfo().name(self.currentPlace().name());
@@ -320,7 +321,6 @@ AppViewModel = function() {
 			update the corresponding place info using the returned
 			Yelp api call
 		*/
-		//console.log(data);
 		this.placeInfo().addressItems(data.location.display_address);
 		this.placeInfo().yelpRatingImg(data.rating_img_url);
 		this.placeInfo().phone(data.display_phone);
@@ -341,18 +341,16 @@ AppViewModel = function() {
 			when the placeTempl div is part of the body we don't want to
 			see it, only when it is attached to the info window
 		*/
-		//$('#placeTmpl')[0].style.visibility = "hidden";
 		$('#placeTmpl')[0].style.display = "none";
 	};
 
 	this.showPlaceTempl = function() {
 		$('#placeTmpl')[0].style.display = "initial";
-		//$('#placeTmpl')[0].style.visibility = "visible";
 	};
 
 
 
-	// after everything is initialized load the default places
+	// initial calls once AppViewModel is defined
 	this.defaultPlaces();
 	this.hidePlaceTempl();
 };

@@ -13,13 +13,27 @@
 	<!--
 		search bar
 	-->
+	<script>
+	  (function() {
+	    var cx = '015078263668044484939:d7rqsmievfy';
+	    var gcse = document.createElement('script');
+	    gcse.type = 'text/javascript';
+	    gcse.async = true;
+	    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+	        '//cse.google.com/cse.js?cx=' + cx;
+	    var s = document.getElementsByTagName('script')[0];
+	    s.parentNode.insertBefore(gcse, s);
+	  })();
+	</script>
+	<gcse:search></gcse:search>
+	<!--
 	<form id="form-search-field">
 		<span>filter by name, city, zip</span><br>
 		<input id="input-search-field" type="search">
 		<input type="submit" class="btnBlue">
 		<input id="input-search-reset" type="button" value="Reset" class="btnBlue">
 	</form>
-
+	-->
 	<!--
 		the Google Map
 	-->
