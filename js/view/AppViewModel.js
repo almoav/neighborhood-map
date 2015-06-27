@@ -9,7 +9,7 @@ ko.bindingHandlers.googlemap = {
 			},
 
     		map = new google.maps.Map(element, mapOptions),
-    		bounds = new google.maps.LatLngBounds(),
+    		//bounds = new google.maps.LatLngBounds(),
 			infowindow = new google.maps.InfoWindow();
 			infowindow.setContent($('#placeTmpl')[0]);
 
@@ -41,30 +41,26 @@ ko.bindingHandlers.googlemap = {
 	    		// have the place observable
 
 	    		//TODO replace viewModel with bindingsContext.$data
-	    		//$('#placeTmpl')[0].style.visibility = "visible";
 	    		viewModel.loadPlace(placeItem);
-	    		//viewModel.showPlaceTempl();
 	    	});
 
 
 			google.maps.event.addListener(infowindow, "closeclick", function() {
 			    //google maps will destroy this node and knockout will stop updating it
 			    //add it back to the body so knockout will take care of it
-			    //$('#placeTmpl')[0].style.visibility = "hidden";
 			    $("body").append($node);
 			    viewModel.hidePlaceTempl();
 			});
 
 
 			// focus the map around the existing markers
-	    	var lat = placeItem.location().lat;
-	    	var lng = placeItem.location().lng;
-	    	bounds.extend(new google.maps.LatLng(lat, lng));
+	    	//var lat = placeItem.location().lat;
+	    	//var lng = placeItem.location().lng;
+	    	//bounds.extend(new google.maps.LatLng(lat, lng));
         });
 
         // center the map
-	    map.fitBounds(bounds);
-	    map.setCenter(bounds.getCenter());
+	    viewModel.focusMap();
 
 		// Add a basic style.
 		map.data.setStyle(function(feature) {
@@ -187,6 +183,7 @@ AppViewModel = function() {
 	this.allPlaces = ko.observableArray([]);
 	this.placeList = ko.observableArray([]);
 
+	this.searchQuery = ko.observable();
 
 	// initialize the default locations
 	formattedLocations.forEach(function(placeItem){
@@ -196,25 +193,10 @@ AppViewModel = function() {
 	this.currentPlace = ko.observable( this.placeList()[0] );
 
 
-	$("#form-search-field").submit(function(event){
-		/*
-			search bar functionality is invoked with
-			form submit event
-		*/
-		event.preventDefault();
+	this.performSearch = function() {
 		self.formatSearch();
 		self.searchPlaces();
-	});
-
-	$("#input-search-reset").click(function(event){
-		/*
-			resets the search filter
-		*/
-		event.preventDefault();
-		$("#input-search-field").val("");
-		self.defaultPlaces();
-		self.resetMarkers();
-	});
+	};
 
 	this.defaultPlaces = function() {
 		/*
@@ -228,11 +210,36 @@ AppViewModel = function() {
 		/*
 			places the default markers back on the map
 		*/
+		// clear search form
+		$("#input-search-field").val("");
 
-		// TODO reset the map view to frame markers
+		// reset default list of places
+		self.defaultPlaces();
+
+		// put the default places' markers back on the map
 		this.allPlaces().forEach(function(placeItem){
 			placeItem.marker().setMap(self.map());
 		});
+
+		// refocus the map
+		this.focusMap();
+	};
+
+	this.focusMap = function() {
+		/*
+			centers the map on the currently active locations
+		*/
+
+		var bounds = new google.maps.LatLngBounds();
+		var locations = self.placeList();
+		for (i = 0; i < locations.length; i++) {
+			var place = locations[i];
+			var myLatLng = new google.maps.LatLng(place.location().lat, place.location().lng);
+			bounds.extend(myLatLng);
+		}
+
+	    self.map().fitBounds(bounds);
+	    self.map().setCenter(bounds.getCenter());
 	};
 
 	this.searchPlaces = function() {
@@ -259,6 +266,7 @@ AppViewModel = function() {
 
 		self.placeList(tempArray);
 		// TODO frame the resulting markers
+		self.focusMap();
 	};
 
 	this.formatSearch = function() {
@@ -267,7 +275,8 @@ AppViewModel = function() {
 		*/
 
 		// format the temp raw input
-		var query = $("#input-search-field")[0].value.trim().toLowerCase();
+		var query = this.searchQuery().trim().toLowerCase();
+
 		queryArray = query.split(" ");
 
 		query = "";
@@ -422,28 +431,6 @@ AppViewModel = function() {
 
 		// send the resulting image urls to the data bind
 		self.placeInfo().flickrPics(photoUrlArray);
-	};
-
-
-	this.wikiRequest = function(place) {
-		/*
-			request a wiki article
-		*/
-		var remoteUrlWithOrigin = "https://en.wikipedia.org/w/api.php?" +
-			"action=opensearch&search="+place.name()+"&format=json&callback=wikiCallback";
-		//var queryData = "";
-
-		$.ajax( {
-		    url: remoteUrlWithOrigin,
-		    //data: queryData,
-		    dataType: 'jsonp',
-		    //type: 'POST',
-		    //headers: { 'Api-User-Agent': 'Example/1.0' },
-		    success: function(data) {
-		       // do something with data
-		       console.log(data);
-		    }
-		} );
 	};
 
 

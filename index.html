@@ -28,11 +28,12 @@
 	</script>
 	<gcse:search></gcse:search>
 	-->
-	<form id="form-search-field">
+	<form data-bind="submit: performSearch">
 		<span>filter by name, city, zip</span><br>
-		<input id="input-search-field" type="search">
+		<input data-bind="value: searchQuery" type="search">
 		<input type="submit" class="btnBlue">
-		<input id="input-search-reset" type="button" value="Reset" class="btnBlue">
+		<input data-bind="click: resetMarkers" type="button" value="Reset" class="btnBlue">
+		<input data-bind="click: focusMap" type="button"  value="Center Map" class="btnBlue">
 	</form>
 
 	<!--
@@ -51,7 +52,7 @@
 		<img data-bind="attr: {src: yelpLogo, alt: 'yelp logo'}"><br>
 		<span data-bind="text: yelpReviews"></span>
 		<a data-bind="attr: {href: yelpUrl}">more...</a><br>
-		<img data-bind="attr: {src: yelpPic, alt: 'place image'}"><br>
+		<!--<img data-bind="attr: {src: yelpPic, alt: 'place image'}"><br>-->
 
 		<ul data-bind="foreach: addressItems">
 			<li>
