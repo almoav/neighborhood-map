@@ -1,17 +1,40 @@
 #mapView {
-  height: 600px;
-  width: 96%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 5%;
+	height: 600px;
+	width: 96%;
+	margin-left: auto;
+	margin-right: auto;
+	padding-bottom: 5%;
 }
 
-ul,li { list-style-type: none;
-        list-style-position:inside;
-        margin:0;
-        padding:0;
+ul,li {
+	list-style-type: none;
+	list-style-position:inside;
+	margin:0;
+	padding:0;
 }
 
+.imgGallery {
+	max-width: 400px;
+	padding: 4px;
+	/*background-color: rgba(0, 102, 255, 0.5);*/
+}
+
+#container {
+	margin-bottom: 8px;
+}
+
+#info {
+	float: left;
+}
+
+#photo {
+	float: right;
+	margin-left: 8px;
+}
+
+#clear {
+    clear: both;
+}
 
 /*
  generated with http://www.bestcssbuttongenerator.com/#/23

@@ -13,21 +13,6 @@
 	<!--
 		search bar
 	-->
-	<!--
-	<script>
-	  (function() {
-	    var cx = '015078263668044484939:d7rqsmievfy';
-	    var gcse = document.createElement('script');
-	    gcse.type = 'text/javascript';
-	    gcse.async = true;
-	    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-	        '//cse.google.com/cse.js?cx=' + cx;
-	    var s = document.getElementsByTagName('script')[0];
-	    s.parentNode.insertBefore(gcse, s);
-	  })();
-	</script>
-	<gcse:search></gcse:search>
-	-->
 	<form data-bind="submit: performSearch">
 		<span>filter by name, city, zip</span><br>
 		<input data-bind="value: searchQuery" type="search">
@@ -44,30 +29,35 @@
 	<!--
 		placeTmpl is attached the the Google Map info window when it is opened
 	-->
-	<div id="placeTmpl" data-bind="with: placeInfo">
+	<div id="foo">
+		<div id="placeTmpl" data-bind="with: placeInfo">
+			<div id="container">
+				<div id="info">
+			        <b><span data-bind="text: name"></span></b>
+			        <span data-bind="text: year"></span><br>
+					<img data-bind="attr: {src: yelpRatingImg, alt: 'rating'}">
+					<img data-bind="attr: {src: yelpLogo, alt: 'yelp logo'}"><br>
+					<span data-bind="text: yelpReviews"></span>
+					<a data-bind="attr: {href: yelpUrl}">more...</a><br>
+					<div data-bind="foreach: addressItems">
+						<span data-bind="text: $data"></span><br>
+					</div>
+					<span data-bind="text: phone"></span>
+				</div>
 
-        <b></button><span data-bind="text: name"></span></b>
-        <span data-bind="text: year"></span><br>
-		<img data-bind="attr: {src: yelpRatingImg, alt: 'rating'}">
-		<img data-bind="attr: {src: yelpLogo, alt: 'yelp logo'}"><br>
-		<span data-bind="text: yelpReviews"></span>
-		<a data-bind="attr: {href: yelpUrl}">more...</a><br>
-		<!--<img data-bind="attr: {src: yelpPic, alt: 'place image'}"><br>-->
+				<div id="photo">
+					<img data-bind="attr: {src: yelpPic, alt: 'place image'}">
+				</div>
+				<div id="clear"></div>
+			</div>
 
-		<ul data-bind="foreach: addressItems">
-			<li>
-				<span data-bind="text: $data"></span>
-			</li>
-		</ul>
-		<span data-bind="text: phone"></span><br>
-
-		<ul data-bind="foreach: flickrPics">
-			<li>
-				<img data-bind="attr: {src: $data, alt: $data}">
-			</li>
-		</ul>
+			<div class="imgGallery" data-bind="foreach: flickrPics">
+				<a data-bind="attr: {href: $data[1]}" target="_blank">
+					<img data-bind="attr: {src: $data[0]}">
+				</a>
+			</div>
+		</div>
 	</div>
-
 	<!--
 		the list of places
 	-->

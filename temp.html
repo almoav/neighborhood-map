@@ -1,0 +1,73 @@
+<!--
+<div style="cursor: default; position: absolute; width: 238px; height: 588px; left: 529px; top: -245px; z-index: -245;">
+<div style="position: absolute; left: 0px; top: 0px;">
+<div style="width: 0px; height: 0px; border-right-width: 10px; border-right-style: solid; border-right-color: transparent; border-left-width: 10px; border-left-style: solid; border-left-color: transparent; border-top-width: 24px; border-top-style: solid; border-top-color: rgba(0, 0, 0, 0.0980392); position: absolute; left: 109px; top: 588px;">
+
+</div>
+<div style="position: absolute; left: 0px; top: 0px; border-radius: 2px; -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; width: 238px; height: 588px; background-color: rgba(0, 0, 0, 0.2);">
+
+</div>
+<div style="border-top-width: 24px; position: absolute; left: 109px; top: 585px;">
+<div style="position: absolute; overflow: hidden; left: -6px; top: -1px; width: 16px; height: 30px;">
+<div style="position: absolute; left: 6px; transform: skewX(22.6deg); transform-origin: 0px 0px 0px; height: 24px; width: 10px; box-shadow: rgba(0, 0, 0, 0.6) 0px 1px 6px; background-color: rgb(255, 255, 255);">
+
+</div>
+</div>
+<div style="position: absolute; overflow: hidden; top: -1px; left: 10px; width: 16px; height: 30px;">
+<div style="position: absolute; left: 0px; transform: skewX(-22.6deg); transform-origin: 10px 0px 0px; height: 24px; width: 10px; box-shadow: rgba(0, 0, 0, 0.6) 0px 1px 6px; background-color: rgb(255, 255, 255);">
+
+</div>
+</div>
+</div>
+<div style="position: absolute; left: 1px; top: 1px; border-radius: 2px; width: 236px; height: 586px; background-color: rgb(255, 255, 255);">
+
+</div>
+</div>
+<div class="gm-style-iw" style="top: 9px; position: absolute; left: 15px; width: 208px;">
+<div style="display: inline-block; overflow: auto; max-height: 570px; max-width: 654px;">
+-->
+
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<div id="foo">
+<div id="placeTmpl" data-bind="with: placeInfo">
+
+        <b><span data-bind="text: name">Jack's Whittier Restaurant</span></b>
+        <span data-bind="text: year">1933</span><br>
+		<img data-bind="attr: {src: yelpRatingImg, alt: 'rating'}" alt="rating" src="http://s3-media1.fl.yelpcdn.com/assets/2/www/img/5ef3eb3cb162/ico/stars/v1/stars_3_half.png">
+		<img data-bind="attr: {src: yelpLogo, alt: 'yelp logo'}" src="https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/55e2efe681ed/assets/img/yelp_logo_50x25.png" alt="yelp logo"><br>
+		<span data-bind="text: yelpReviews">186 reviews</span>
+		<a data-bind="attr: {href: yelpUrl}" href="http://www.yelp.com/biz/jacks-whittier-restaurant-whittier">more...</a><br>
+		<img data-bind="attr: {src: yelpPic, alt: 'place image'}" alt="place image" src="http://s3-media1.fl.yelpcdn.com/bphoto/lHT7WLvp03yaDp_Gj02X0A/ms.jpg"><br>
+
+		<ul data-bind="foreach: addressItems">
+			<li>
+				<span data-bind="text: $data">13221 Whittier Blvd</span>
+			</li>
+
+			<li>
+				<span data-bind="text: $data">Whittier, CA 90602</span>
+			</li>
+		</ul>
+		<span data-bind="text: phone">+1-562-693-8713</span><br>
+
+		<ul id="flickrList" data-bind="foreach: flickrPics">
+			<li>
+				<img data-bind="attr: {src: $data, alt: $data}" src="https://farm8.staticflickr.com/7757/17624583793_ee3ace8230_q.jpg" alt="https://farm8.staticflickr.com/7757/17624583793_ee3ace8230_q.jpg">
+			</li>
+
+			<li>
+				<img data-bind="attr: {src: $data, alt: $data}" src="https://farm8.staticflickr.com/7727/17188286327_f055d222a7_q.jpg" alt="https://farm8.staticflickr.com/7727/17188286327_f055d222a7_q.jpg">
+			</li>
+
+			<li>
+				<img data-bind="attr: {src: $data, alt: $data}" src="https://farm8.staticflickr.com/7687/16863201679_d3bf1de38a_q.jpg" alt="https://farm8.staticflickr.com/7687/16863201679_d3bf1de38a_q.jpg">
+			</li>
+
+			<li>
+				<img data-bind="attr: {src: $data, alt: $data}" src="https://farm4.staticflickr.com/3844/15190773555_8ae3301c43_q.jpg" alt="https://farm4.staticflickr.com/3844/15190773555_8ae3301c43_q.jpg">
+			</li>
+		</ul>
+	</div>
+	</div>
+	</div>
+	</div><div style="width: 13px; height: 13px; overflow: hidden; position: absolute; opacity: 0.7; right: 12px; top: 10px; z-index: 10000; cursor: pointer;"><img src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png" draggable="false" style="position: absolute; left: -2px; top: -336px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px;"></div></div>
