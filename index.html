@@ -29,12 +29,18 @@
 	<!--
 		placeTmpl is attached the the Google Map info window when it is opened
 	-->
-	<div id="foo">
+	<div id="infoWin">
 		<div id="placeTmpl" data-bind="with: placeInfo">
 			<div id="container">
 				<div id="info">
 			        <b><span data-bind="text: name"></span></b>
 			        <span data-bind="text: year"></span><br>
+					<div data-bind="foreach: categories">
+						<span data-bind="text: $data"></span>
+					</div>
+					<div data-bind="foreach: neighborhoods">
+						<span data-bind="text: $data"></span>
+					</div>
 					<img data-bind="attr: {src: yelpRatingImg, alt: 'rating'}">
 					<img data-bind="attr: {src: yelpLogo, alt: 'yelp logo'}"><br>
 					<span data-bind="text: yelpReviews"></span>
@@ -49,17 +55,18 @@
 					<img data-bind="attr: {src: yelpPic, alt: 'place image'}">
 				</div>
 				<div id="clear"></div>
-			</div>
 
+			<i><span id="flickrLabel">recent Flickr images</span></i>
 			<div class="imgGallery" data-bind="foreach: flickrPics">
 				<a data-bind="attr: {href: $data[1]}" target="_blank">
-					<img data-bind="attr: {src: $data[0]}">
+					<img data-bind="attr: {src: $data[0]}" class="imgFlickr">
 				</a>
+			</div>
 			</div>
 		</div>
 	</div>
 	<!--
-		the list of places
+		the list view
 	-->
 	<div id="listView">
 		<ul data-bind='foreach: placeList'>

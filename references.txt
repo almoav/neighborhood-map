@@ -10,3 +10,6 @@ https://stackoverflow.com/questions/15317796/knockout-loses-bindings-when-google
 // working with flickr json response
 http://stackoverflow.com/questions/22945503/jsonp-issue-with-flickrapi-uncaught-referenceerror-jsonflickrapi-is-not-define
 http://kylerush.net/blog/flickr-api/
+
+// js animation
+http://javascript.info/tutorial/animation

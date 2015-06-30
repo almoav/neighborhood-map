@@ -35,7 +35,6 @@ ko.bindingHandlers.googlemap = {
 			google.maps.event.addListener(marker, 'click', function() {
 	    		// set the current place from here because we
 	    		// have the place observable
-	    		//TODO replace viewModel with bindingsContext.$data
 	    		viewModel.loadPlace(placeItem);
 	    	});
 
@@ -108,6 +107,29 @@ Place = function(data) {
 		this.makeSymbol(color);
 	};
 
+	this.animateMarker = function() {
+		/*
+			simple animation on marker symbol
+		*/
+		var icon = this.marker().getIcon();
+		var scale = 0;
+		var origScale = icon.scale;
+
+		this.frame = function() {
+			// increment scale
+			scale++;
+			icon.scale = origScale * (scale/10);
+
+			// apply icon and close loop
+			self.marker().setIcon(icon);
+			if (scale == 10) {
+				clearInterval(animate);
+			}
+		};
+
+		var animate = setInterval(this.frame, 20);
+	};
+
 	this.interpolateHsl = function(lowHsl, highHsl, fraction) {
 		/*
 			blend between two hsl colors
@@ -147,8 +169,10 @@ PlaceInfo = function() {
 	this.year = ko.observable();
 	this.address = ko.observable();
 	this.location = ko.observable();
+	this.neighborhoods = ko.observableArray([]);
 	this.addressItems = ko.observableArray([]);
 	this.phone = ko.observable();
+	this.categories = ko.observableArray([]);
 	this.yelpRating = ko.observable();
 	this.yelpRatingImg = ko.observable();
 	this.yelpReviewCount = ko.observable();
@@ -220,9 +244,8 @@ AppViewModel = function() {
 
 	this.focusMap = function() {
 		/*
-			centers the map on the currently active locations
+			centers the map on the currently visable markers
 		*/
-
 		var bounds = new google.maps.LatLngBounds();
 		var locations = self.placeList();
 		for (i = 0; i < locations.length; i++) {
@@ -294,11 +317,16 @@ AppViewModel = function() {
 		if (!place) {place = this;}
 
 		// selection actions
+		// clear contents and set current place
 		self.clearInfoWindowContents();
 		self.currentPlace(place);
+		self.currentPlace().animateMarker();
+
+		// invoke api requests
 		self.yelpRequest(place);
-		//self.wikiRequest(place);
 		self.flickrRequest(place);
+
+		// display api info
 		self.openInfowin();
 		self.showPlaceTempl();
 
@@ -374,14 +402,13 @@ AppViewModel = function() {
 		/*
 			request a few relevant photos from Flickr
 		*/
-
 		var endpoint = "https://api.flickr.com/services/rest/?";
 		var key = "3e3c69be991d3241319ef92adac0855e";
 		var secret = "964e876111b73fdd";
 		var method = "&method=flickr.photos.search";
 		var query = "&text=" + place.name();
 		var format = "&format=json";
-		var number = "&per_page=4";
+		var number = "&per_page=8";
 		var requestUrl = endpoint + method + query + "&api_key=" + key + number + format;
 
 		$.ajax({
@@ -394,24 +421,44 @@ AppViewModel = function() {
 				self.parseFlickrPhotos(result);
 			}
 		});
+	};
 
+	this.injectYelpResult = function(data) {
 		/*
-		method =  "&method=flickr.places.findByLatLon";
-		var lat = "&lat="+place.location().lat;
-		var lng = "&lng="+place.location().lng;
-		requestUrl = endpoint + method + "&api_key=" + key + lat + lng;
+			update the corresponding place info using the returned
+			Yelp api call
+		*/
+		var addressitems = [];
+		var categoryitems = [];
 
-		$.ajax({
-			url: requestUrl,
-			type: "GET",
-			cache: true,
-			//dataType: "jsonp",
-			//jsonp: "jsoncallback",
-			success: function(result) {
-				console.log(result);
+		// in case there's a second address item include it
+		for (i=0; i<data.location.address.length; i++) {
+			addressitems.push(data.location.address[i]);
+		}
+
+		// address is city + state + zip
+		addressitems.push(data.location.city+" "+data.location.state_code+", "+data.location.postal_code)
+
+		// build an array of place categories
+		for (i=0; i<data.categories.length; i++) {
+			var categoryString = data.categories[i][0];
+			if (i != (data.categories.length)-1) {
+				categoryString += ",";
 			}
-		});
-*/
+
+			categoryitems.push(categoryString);
+		}
+
+		this.placeInfo().neighborhoods(data.location.neighborhoods);
+		this.placeInfo().addressItems(addressitems);
+		this.placeInfo().yelpRatingImg(data.rating_img_url);
+		this.placeInfo().phone(data.display_phone);
+		this.placeInfo().categories(categoryitems);
+		this.placeInfo().yelpRating(data.rating);
+		this.placeInfo().yelpRatingImg(data.rating_img_url);
+		this.placeInfo().yelpReviewCount(data.review_count);
+		this.placeInfo().yelpPic(data.image_url);
+		this.placeInfo().yelpUrl(data.url);
 
 	};
 
@@ -437,7 +484,7 @@ AppViewModel = function() {
 			var secret = photoJsonArray[i].secret;
 			var server = photoJsonArray[i].server;
 
-			var picUrl = "https://farm"+farm+".staticflickr.com/"+server+"/"+id+"_"+secret+"_s.jpg";
+			var picUrl = "https://farm"+farm+".staticflickr.com/"+server+"/"+id+"_"+secret+"_q.jpg";
 			var picLinkUrl = "https://www.flickr.com/photos/"+owner+"/"+id;
 			photoUrlArray.push([picUrl, picLinkUrl]);
 		}
@@ -446,6 +493,10 @@ AppViewModel = function() {
 		self.placeInfo().flickrPics(photoUrlArray);
 	};
 
+
+	this.openInfowin = function() {
+		this.infowindow().open(this.map(), this.currentPlace().marker());
+	};
 
 	this.clearInfoWindowContents = function() {
 		/*
@@ -463,39 +514,22 @@ AppViewModel = function() {
 
 	};
 
-	this.injectYelpResult = function(data) {
-		/*
-			update the corresponding place info using the returned
-			Yelp api call
-		*/
-		this.placeInfo().addressItems(data.location.display_address);
-		this.placeInfo().yelpRatingImg(data.rating_img_url);
-		this.placeInfo().phone(data.display_phone);
-		this.placeInfo().yelpRating(data.rating);
-		this.placeInfo().yelpRatingImg(data.rating_img_url);
-		this.placeInfo().yelpReviewCount(data.review_count);
-		this.placeInfo().yelpPic(data.image_url);
-		this.placeInfo().yelpUrl(data.url);
-
-	};
-
-	this.openInfowin = function() {
-		this.infowindow().open(this.map(), this.currentPlace().marker());
-	};
 
 	this.hidePlaceTempl = function() {
 		/*
 			when the placeTempl div is part of the body we don't want to
 			see it, only when it is attached to the info window
 		*/
-		$('#foo')[0].style.display = "none";
-		//$('#placeTmpl')[0].style.display = "none";
+		$('#placeTmpl')[0].style.display = "none";
 	};
 
 	this.showPlaceTempl = function() {
-		$('#foo')[0].style.display = "initial";
-		//$('#placeTmpl')[0].style.display = "initial";
+		$('#placeTmpl')[0].style.display = "initial";
 	};
+
+	$(window).resize(function() {
+		self.focusMap();
+	});
 
 
 	// initial calls once AppViewModel is defined

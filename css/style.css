@@ -1,6 +1,6 @@
 #mapView {
 	height: 600px;
-	width: 96%;
+	width: 94vw;
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 5%;
@@ -14,22 +14,39 @@ ul,li {
 }
 
 .imgGallery {
-	max-width: 400px;
-	padding: 4px;
+	max-width: 98%;
+	padding: 2%;
+	float: center;
 	/*background-color: rgba(0, 102, 255, 0.5);*/
 }
 
+.imgContainer {
+	max-width: 20%;
+	padding: 1%;
+	margin: 0%;
+}
+
+.imgFlickr {
+	width: 24%;
+	float: top;
+
+}
+
 #container {
-	margin-bottom: 8px;
+	max-width: 350px
 }
 
 #info {
 	float: left;
+	max-width: 66.5%;
+	margin-bottom: 10%;
 }
 
 #photo {
 	float: right;
-	margin-left: 8px;
+	margin-right: 2%;
+	max-width: 28.5%;
+
 }
 
 #clear {
