@@ -4,6 +4,19 @@
 	<meta charset="UTF-8">
 	<title>Neighborhood Map</title>
 	<link href="css/style.css" rel="stylesheet" type="text/css">
+	<link href="css/offline-theme-slide.css" rel="stylesheet" type="text/css">
+	<link href="css/offline-language-english.css" rel="stylesheet" type="text/css">
+	<script src='js/libs/offline.v0.7.11.min.js'></script>
+	<script>
+		var run = function(){
+			if (Offline.state === 'up') {
+				Offline.check();
+			}
+		};
+		setInterval(run, 5000);
+	</script>
+
+
 </head>
 
 <body>
