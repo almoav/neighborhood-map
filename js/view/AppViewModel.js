@@ -147,10 +147,10 @@ PlaceInfo = function() {
 	this.year = ko.observable();
 	this.address = ko.observable();
 	this.location = ko.observable();
-	this.neighborhoods = ko.observableArray([]);
-	this.addressItems = ko.observableArray([]);
+	this.neighborhoods = ko.observableArray();
+	this.addressItems = ko.observableArray();
 	this.phone = ko.observable();
-	this.categories = ko.observableArray([]);
+	this.categories = ko.observableArray();
 	this.yelpRating = ko.observable();
 	this.yelpRatingImg = ko.observable();
 	this.yelpReviewCount = ko.observable();
@@ -160,7 +160,7 @@ PlaceInfo = function() {
 	this.yelpPic = ko.observable();
 	this.yelpUrl = ko.observable();
 	this.yelpLogo = "https://s3-media2.fl.yelpcdn.com/assets/srv0/developer_pages/55e2efe681ed/assets/img/yelp_logo_50x25.png";
-	this.flickrPics = ko.observableArray([]);
+	this.flickrPics = ko.observableArray();
 
 };
 
@@ -175,8 +175,8 @@ AppViewModel = function() {
 	this.placeInfo = ko.observable(new PlaceInfo());
 
 	// save a list of all places as well as currently displayed places list
-	this.allPlaces = ko.observableArray([]);
-	this.placeList = ko.observableArray([]);
+	this.allPlaces = ko.observableArray();
+	this.placeList = ko.observableArray();
 
 	this.searchQuery = ko.observable();
 
@@ -205,7 +205,8 @@ AppViewModel = function() {
 			places the default markers back on the map
 		*/
 		// clear search form
-		$("#input-search-field").val("");
+		$(".input-search").val("");
+
 
 		// reset default list of places
 		self.defaultPlaces();
@@ -225,7 +226,8 @@ AppViewModel = function() {
 		*/
 		var bounds = new google.maps.LatLngBounds();
 		var locations = self.placeList();
-		for (i = 0; i < locations.length; i++) {
+		var length = locations.length;
+		for (i = 0; i < length; i++) {
 			var place = locations[i];
 			var myLatLng = new google.maps.LatLng(place.location().lat, place.location().lng);
 			bounds.extend(myLatLng);
@@ -391,7 +393,8 @@ AppViewModel = function() {
 		var categoryitems = [];
 
 		// in case there's a second address item include it
-		for (i = 0; i<data.location.address.length; i++) {
+		var length = data.location.address.length;
+		for (i = 0; i<length; i++) {
 			addressitems.push(data.location.address[i]);
 		}
 
@@ -399,7 +402,8 @@ AppViewModel = function() {
 		addressitems.push(data.location.city + " " + data.location.state_code + ", " + data.location.postal_code);
 
 		// build an array of place categories
-		for (i = 0; i<data.categories.length; i++) {
+		var length = data.categories.length;
+		for (i = 0; i < length; i++) {
 			var categoryString = data.categories[i][0];
 			if (i != (data.categories.length) - 1) {
 				categoryString += ",";
@@ -435,8 +439,8 @@ AppViewModel = function() {
 
 		var photoJsonArray = response.photos.photo;
 		var photoUrlArray = [];
-
-		for (i = 0; i<photoJsonArray.length; i++) {
+		var length = photoJsonArray.length;
+		for (i = 0; i<length; i++) {
 			var farm = photoJsonArray[i].farm;
 			var id = photoJsonArray[i].id;
 			var owner =  photoJsonArray[i].owner;

@@ -3,12 +3,12 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Neighborhood Map</title>
-	<link href="css/style.css" rel="stylesheet" type="text/css">
-	<link href="css/offline-theme-slide.css" rel="stylesheet" type="text/css">
-	<link href="css/offline-language-english.css" rel="stylesheet" type="text/css">
-	<script src='js/libs/offline.v0.7.11.min.js'></script>
+	<link href="css/style.css" rel="stylesheet">
+	<link href="css/offline-theme-slide.css" rel="stylesheet">
+	<link href="css/offline-language-english.css" rel="stylesheet">
+	<!--<script src='js/libs/offline.v0.7.11.min.js'></script>-->
 	<script>
-		var run = function(){
+		var run = function() {
 			if (Offline.state === 'up') {
 				Offline.check();
 			}
@@ -28,7 +28,7 @@
 	-->
 	<form data-bind="submit: performSearch">
 		<span>filter by name, city, zip</span><br>
-		<input data-bind="value: searchQuery" type="search">
+		<input data-bind="value: searchQuery" type="search" class="input-search">
 		<input type="submit" class="btnBlue">
 		<input data-bind="click: resetMarkers" type="button" value="Reset" class="btnBlue">
 		<input data-bind="click: focusMap" type="button"  value="Center Map" class="btnBlue">
@@ -37,15 +37,15 @@
 	<!--
 		the Google Map
 	-->
-	<div id="mapView" data-bind="googlemap: { locations: placeList, centerLat: 41.48, centerLon: -81.67 }"></div>
+	<div class="mapView" data-bind="googlemap: { locations: placeList, centerLat: 41.48, centerLon: -81.67 }"></div>
 
 	<!--
 		placeTmpl is attached the the Google Map info window when it is opened
 	-->
 	<div id="infoWin">
 		<div id="placeTmpl" data-bind="with: placeInfo">
-			<div id="container">
-				<div id="info">
+			<div class="container">
+				<div class="info">
 			        <b><span data-bind="text: name"></span></b>
 			        <span data-bind="text: year"></span><br>
 					<div data-bind="foreach: categories">
@@ -64,12 +64,12 @@
 					<span data-bind="text: phone"></span>
 				</div>
 
-				<div id="photo">
+				<div class="photo">
 					<img data-bind="attr: {src: yelpPic, alt: 'place image'}">
 				</div>
-				<div id="clear"></div>
+				<div class="clear"></div>
 
-			<i><span id="flickrLabel">recent Flickr images</span></i>
+			<i><span class="flickrLabel">recent Flickr images</span></i>
 			<div class="imgGallery" data-bind="foreach: flickrPics">
 				<a data-bind="attr: {href: $data[1]}" target="_blank">
 					<img data-bind="attr: {src: $data[0]}" class="imgFlickr">
@@ -82,20 +82,20 @@
 		the list view
 	-->
 	<div id="listView">
-		<ul data-bind='foreach: placeList'>
+		<ul data-bind="foreach: placeList">
 			<li>
-				<button class="btnWhite" data-bind='click: $parent.loadPlace, text: $data.name'></button>
+				<button class="btnWhite" data-bind="click: $parent.loadPlace, text: $data.name"></button>
 			</li>
 		</ul>
 	</div>
 
-	<script type='text/javascript' src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
-    <script type='text/javascript' src='js/libs/knockout.3.3.0.js'></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
-    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
-	<script type='text/javascript' src='js/model/formattedLocations.js'></script>
-    <script type='text/javascript' src="js/view/AppViewModel.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script src="js/libs/knockout.3.3.0.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+	<script src="js/model/formattedLocations.js"></script>
+    <script src="js/view/AppViewModel.js"></script>
 
 </body>
 </html>

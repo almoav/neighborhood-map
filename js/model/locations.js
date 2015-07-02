@@ -1,13 +1,18 @@
+/*
+	this file is used for hard coding Google geocode info about
+	our list of places, it is not used in the live app but I'm
+	saving it here in case I need to update the map place data
+*/
+
 var geocodeLocations = function() {
 	// run a geocode search on our locations array and save for later
 	var self = this;
 	this.formattedLocations = [];
 
-	locations.forEach(function(placeItem){
-		var location = {};
-		var placeInfo = {};
+	locations.forEach(function(placeItem) {
+		var location = {}, placeInfo = {};
 
-		mapUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + placeItem.address + "&key=AIzaSyBAjev0Cj1NaUQqYngMZvSPQ4kzHkMiuns";
+		var mapUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + placeItem.address + "&key=AIzaSyBAjev0Cj1NaUQqYngMZvSPQ4kzHkMiuns";
 		$.getJSON( mapUrl, function(data){
 			// save the raw geocode result
 			placeInfo = data.results[0];
@@ -31,18 +36,6 @@ var geocodeLocations = function() {
 			} catch(err) {
 				console.log(placeItem.name);
 			}
-
-
-
-			/*
-			console.log('"name" : "' + placeItem.name + '",');
-			console.log('"year" : ', placeItem.year + ',');
-			console.log('"location" : ', placeItem.location);
-			console.log('"place_id" : "' + placeItem.place_id + '",');
-			console.log('"address" : "' + placeItem.address + '",');
-			console.log('"link" : "' + placeItem.link + '"');
-			console.log("");
-			*/
 		});
 	});
 };
