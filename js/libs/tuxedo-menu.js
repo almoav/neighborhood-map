@@ -12,7 +12,7 @@
 			isFixed: true
 		}, options);
 
-		self.addClass('tuxedo-menu tuxedo-menu-pristine animated')
+		self.addClass('tuxedo-menu animated')
 			.toggleClass('tuxedo-menu-visible', !settings.isFixed)
 			.toggleClass('tuxedo-menu-fixed slideOutLeft', settings.isFixed);
 		$(settings.triggerSelector).addClass('tuxedo-menu-trigger');
@@ -26,7 +26,7 @@
 				.toggleClass('slideInLeft slideOutLeft')
 				.addClass('tuxedo-menu-visible');
 		});
-
+		/*
 		$(document).click(function (event) {
 			if (!settings.isFixed ||
 				$(event.target).is(settings.triggerSelector)) {
@@ -41,7 +41,7 @@
 					.addClass('slideOutLeft');
 			}
 		});
-
+		*/
 		return self;
 	};
 }(jQuery));

@@ -103,7 +103,7 @@ Place = function(data) {
 		this.frame = function() {
 			// increment scale
 			scale++;
-			icon.scale = origScale * (scale / 10);
+			icon.scale = origScale * (10 / scale);
 
 			// apply icon and close loop
 			self.marker().setIcon(icon);
@@ -237,6 +237,42 @@ AppViewModel = function() {
 		self.map().setCenter(bounds.getCenter());
 	};
 
+	this.focusOnSelected = function() {
+		/*
+			center the map on the selected marker
+		*/
+		var latLng = self.currentPlace().marker().getPosition();
+		self.map().setCenter(latLng);
+	};
+
+	this.offsetCenter = function(latlng,offsetx,offsety) {
+
+		// latlng is the apparent centre-point
+		// offsetx is the distance you want that point to move to the right, in pixels
+		// offsety is the distance you want that point to move upwards, in pixels
+		// offset can be negative
+		// offsetx and offsety are both optional
+
+		var scale = Math.pow(2, self.map().getZoom());
+		var nw = new google.maps.LatLng(
+		    self.map().getBounds().getNorthEast().lat(),
+		    self.map().getBounds().getSouthWest().lng()
+		);
+
+		var worldCoordinateCenter = self.map().getProjection().fromLatLngToPoint(latlng);
+		var pixelOffset = new google.maps.Point((offsetx/scale) || 0,(offsety/scale) ||0)
+
+		var worldCoordinateNewCenter = new google.maps.Point(
+		    worldCoordinateCenter.x - pixelOffset.x,
+		    worldCoordinateCenter.y + pixelOffset.y
+		);
+
+		var newCenter = self.map().getProjection().fromPointToLatLng(worldCoordinateNewCenter);
+
+		self.map().setCenter(newCenter);
+
+		}
+
 	this.searchPlaces = function() {
 		/*
 			filters the existing list of places using
@@ -299,6 +335,9 @@ AppViewModel = function() {
 		// clear contents and set current place
 		self.clearInfoWindowContents();
 		self.currentPlace(place);
+
+		// focus map on current place
+		self.focusOnSelected();
 		self.currentPlace().animateMarker();
 
 		// invoke api requests
@@ -358,7 +397,12 @@ AppViewModel = function() {
 		var parameterMap = OAuth.getParameterMap(message.parameters);
 
 		$.ajax({
-			'url': message.action, 'data': parameterMap, 'dataType': 'jsonp', 'jsonpCallback': 'cb', 'success': function(data, textStats, XMLHttpRequest) {
+			'url' : message.action,
+			'cache' : true,
+			'data' : parameterMap,
+			'dataType' : 'jsonp',
+			'jsonpCallback' : 'cb',
+			'success' : function(data, textStats, XMLHttpRequest) {
 				result = data.businesses[0];
 				self.injectYelpResult(result);
 			}

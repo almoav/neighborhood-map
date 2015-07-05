@@ -6,9 +6,11 @@
 	<link href="css/style.css" rel="stylesheet">
 	<link href="css/offline-theme-slide.css" rel="stylesheet">
 	<link href="css/offline-language-english.css" rel="stylesheet">
-	<link href="css/slide-menu.css" rel="stylesheet">
-	<link href="css/tuxedo-menu.css" rel="stylesheet">
-	<link href="css/animate.css" rel="stylesheet">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/simple-sidebar.css" rel="stylesheet">
+	<!--
+		Note to self: uncomment this when ready to resubmit
+	-->
 	<!--<script src='js/libs/offline.v0.7.11.min.js'></script>
 	<script>
 		var run = function() {
@@ -23,37 +25,36 @@
 </head>
 
 <body>
-	<h1>Leftovers:</h1>
-	<b><span>the oldest restaurants in the greater LA area</span></b><br>
-
+<div id="wrapper">
+	<div class="header">
+		<h1>Leftovers:</h1>
+		<b><span>the oldest restaurants in the greater LA area</span></b><br>
+		<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+	</div>
 	<!--
 		search bar
 	-->
-	<form data-bind="submit: performSearch">
+	<form class="search" data-bind="submit: performSearch">
 		<span>filter by name, city, zip</span><br>
 		<input data-bind="value: searchQuery" type="search" class="input-search">
-		<input type="submit" class="btnBlue">
+		<input type="submit" class="btnBlue" value="Search"><br>
 		<input data-bind="click: resetMarkers" type="button" value="Reset" class="btnBlue">
 		<input data-bind="click: focusMap" type="button"  value="Center Map" class="btnBlue">
 	</form>
 
-
 	<!--
 		the list view
 	-->
-
-	<button id="tuxedo-menu-trigger" class="btnBlue">List View</button>
-
-	<nav id="sidebar" class="tuxedo-menu tuxedo-menu-fixed tuxedo-menu-slide-closing tuxedo-menu-pristine">
+	<div id="sidebar-wrapper">
 		<h3>List View</h3>
 		<div id="listView">
 			<ul data-bind="foreach: placeList">
 				<li>
-					<button data-bind="click: $parent.loadPlace, text: $data.name"></button>
+					<a data-bind="click: $parent.loadPlace, text: $data.name"></a>
 				</li>
 			</ul>
 		</div>
-	</nav>
+	</div>
 
 	<!--
 		the Google Map
@@ -99,21 +100,23 @@
 			</div>
 		</div>
 	</div>
-
-
+	</div>
 	<script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
 	<script src="js/libs/knockout.3.3.0.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+	<script src="js/libs/jquery.js"></script>
+	<script src="js/libs/bootstrap.min.js"></script>
 	<script src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
 	<script src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
 	<script src="js/model/formattedLocations.js"></script>
 	<script src="js/view/AppViewModel.js"></script>
-	<script src="js/libs/tuxedo-menu.js"></script>
-	<script>
-	    (function ($) {
-	        var isFixed = true;
-	        $('#sidebar').tuxedoMenu({ isFixed: isFixed });
-	    })(jQuery);
-	</script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
 </body>
 </html>
