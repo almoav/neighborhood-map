@@ -1,5 +1,6 @@
 .header {
 	float: left;
+	margin-bottom: 1%;
 }
 
 .search {
@@ -13,6 +14,10 @@
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 5%;
+}
+
+a {
+	cursor: pointer;
 }
 
 ul,

@@ -240,38 +240,30 @@ AppViewModel = function() {
 	this.focusOnSelected = function() {
 		/*
 			center the map on the selected marker
+			w/ an offset to frame the info window
 		*/
-		var latLng = self.currentPlace().marker().getPosition();
-		self.map().setCenter(latLng);
-	};
-
-	this.offsetCenter = function(latlng,offsetx,offsety) {
-
-		// latlng is the apparent centre-point
-		// offsetx is the distance you want that point to move to the right, in pixels
-		// offsety is the distance you want that point to move upwards, in pixels
-		// offset can be negative
-		// offsetx and offsety are both optional
+		var offsetx = 0;
+		var offsety = -150;
+		var latlng = new google.maps.LatLng(
+			self.currentPlace().location().lat,
+			self.currentPlace().location().lng
+			);
 
 		var scale = Math.pow(2, self.map().getZoom());
-		var nw = new google.maps.LatLng(
-		    self.map().getBounds().getNorthEast().lat(),
-		    self.map().getBounds().getSouthWest().lng()
-		);
 
 		var worldCoordinateCenter = self.map().getProjection().fromLatLngToPoint(latlng);
 		var pixelOffset = new google.maps.Point((offsetx/scale) || 0,(offsety/scale) ||0)
 
 		var worldCoordinateNewCenter = new google.maps.Point(
-		    worldCoordinateCenter.x - pixelOffset.x,
-		    worldCoordinateCenter.y + pixelOffset.y
+			worldCoordinateCenter.x - pixelOffset.x,
+			worldCoordinateCenter.y + pixelOffset.y
 		);
 
 		var newCenter = self.map().getProjection().fromPointToLatLng(worldCoordinateNewCenter);
 
 		self.map().setCenter(newCenter);
 
-		}
+		};
 
 	this.searchPlaces = function() {
 		/*
