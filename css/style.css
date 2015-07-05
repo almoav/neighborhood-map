@@ -1,10 +1,17 @@
 .header {
+	margin-left: auto;
+}
+.title {
 	float: left;
+	margin-left: 2%;
 	margin-bottom: 1%;
 }
 
 .search {
 	float: right;
+	margin-right: 2%;
+	margin-top: 1%;
+	margin-bottom: 1%;
 }
 
 
@@ -14,6 +21,10 @@
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 5%;
+}
+
+.sidebar {
+	color: black;
 }
 
 a {

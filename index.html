@@ -27,30 +27,30 @@
 <body>
 <div id="wrapper">
 	<div class="header">
-		<h1>Leftovers:</h1>
-		<b><span>the oldest restaurants in the greater LA area</span></b><br>
-		<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+		<div class="title">
+			<h1>Leftovers:</h1>
+			<b><span>the oldest restaurants in the greater LA area</span></b>
+		</div>
+		<!--
+			search bar
+		-->
+		<form class="search" data-bind="submit: performSearch">
+			<!--<span>filter by name, city, zip</span><br>-->
+			<input data-bind="value: searchQuery" type="search" class="input-search">
+			<input type="submit" class="btn btn-default btn-primary" value="Search"><br>
+			<input data-bind="click: resetMarkers" type="button" value="Reset" class="btn btn-default">
+			<a href="#menu-toggle" class="btn btn-default btn-primary" id="menu-toggle">List View</a>
+		</form>
 	</div>
-	<!--
-		search bar
-	-->
-	<form class="search" data-bind="submit: performSearch">
-		<span>filter by name, city, zip</span><br>
-		<input data-bind="value: searchQuery" type="search" class="input-search">
-		<input type="submit" class="btn btn-default" value="Search"><br>
-		<input data-bind="click: resetMarkers" type="button" value="Reset" class="btn btn-default">
-		<input data-bind="click: focusMap" type="button"  value="Center Map" class="btn btn-default">
-	</form>
-
 	<!--
 		the list view
 	-->
-	<div id="sidebar-wrapper">
+	<div id="sidebar-wrapper" class="sidebar">
 		<h3>List View</h3>
 		<div id="listView">
 			<ul data-bind="foreach: placeList">
 				<li>
-					<a data-bind="click: $parent.loadPlace, text: $data.name"></a>
+					<a class="btn btn-default btn-block" data-bind="click: $parent.loadPlace, text: $data.truncName"></a>
 				</li>
 			</ul>
 		</div>
@@ -59,7 +59,7 @@
 	<!--
 		the Google Map
 	-->
-	<div class="mapView" data-bind="googlemap: { locations: placeList, centerLat: 41.48, centerLon: -81.67 }"></div>
+	<div class="mapView" data-bind="googlemap: { locations: placeList, centerLat: 33.95, centerLon: -118.10 }"></div>
 
 	<!--
 		placeTmpl is attached the the Google Map info window when it is opened
@@ -110,13 +110,22 @@
 	<script src="js/model/formattedLocations.js"></script>
 	<script src="js/view/AppViewModel.js"></script>
 
-    <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
+	<!-- Bootstrap script -->
+	<script>
+	// toggle the sidebar
+	$("#menu-toggle").click(function(e) {
+		e.preventDefault();
+		$("#wrapper").toggleClass("toggled");
+	});
+
+	$(function() {
+		// hilight selected button in list view
+		$('a').click( function() {
+			$(this).addClass('btn-primary');
+			$(this).parent().siblings().children().removeClass('btn-primary');
+		});
+	});
+	</script>
 
 </body>
 </html>

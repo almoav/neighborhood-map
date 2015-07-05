@@ -40,7 +40,7 @@ ko.bindingHandlers.googlemap = {
 		});
 
 		// center the map
-		viewModel.focusMap();
+		viewModel.resetMap();
 
 		// Add a basic style.
 		map.data.setStyle(function(feature) {
@@ -52,6 +52,17 @@ ko.bindingHandlers.googlemap = {
 		});
 	}, };
 
+
+String.prototype.trunc = String.prototype.trunc ||
+	/*
+		modify the trunc function to append an ellipsis
+		I'm using this to shorten long restaurant names
+	*/
+	function(n){
+		return this.length>n ? this.substr(0,n-1)+'...' : this;
+	};
+
+
 Place = function(data) {
 	/*
 		stores map information for each of the entries in the
@@ -59,6 +70,10 @@ Place = function(data) {
 	*/
 	var self = this;
 	this.name = ko.observable(data.name);
+	this.truncName = ko.computed(function() {
+		//console.log(self.name());
+		return self.name().trunc(25);
+	});
 	this.year = ko.observable(data.year);
 	this.address = ko.observable(data.address);
 	this.location = ko.observable(data.location);
@@ -188,8 +203,10 @@ AppViewModel = function() {
 	this.currentPlace = ko.observable( this.placeList()[0] );
 
 	this.performSearch = function() {
-		self.formatSearch();
-		self.searchPlaces();
+		if (this.searchQuery()) {
+			self.formatSearch();
+			self.searchPlaces();
+		}
 	};
 
 	this.defaultPlaces = function() {
@@ -217,7 +234,17 @@ AppViewModel = function() {
 		});
 
 		// refocus the map
-		this.focusMap();
+		//this.focusMap();
+		this.resetMap();
+	};
+
+	this.resetMap = function() {
+		/*
+			sets the map focus back to the initial view
+		*/
+		var latlng = new google.maps.LatLng(33.95, -118.30);
+		self.map().setZoom(10);
+		self.map().panTo(latlng);
 	};
 
 	this.focusMap = function() {
@@ -261,7 +288,7 @@ AppViewModel = function() {
 
 		var newCenter = self.map().getProjection().fromPointToLatLng(worldCoordinateNewCenter);
 
-		self.map().setCenter(newCenter);
+		self.map().panTo(newCenter);
 
 		};
 
@@ -312,6 +339,8 @@ AppViewModel = function() {
 		query = query.slice(0, -1);
 
 		this.queryRe = new RegExp(query);
+
+
 	};
 
 	this.loadPlace = function(place) {
