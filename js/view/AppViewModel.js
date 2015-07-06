@@ -287,7 +287,7 @@ AppViewModel = function() {
 		var scale = Math.pow(2, self.map().getZoom());
 
 		var worldCoordinateCenter = self.map().getProjection().fromLatLngToPoint(latlng);
-		var pixelOffset = new google.maps.Point((offsetx/scale) || 0,(offsety/scale) ||0)
+		var pixelOffset = new google.maps.Point((offsetx/scale) || 0,(offsety/scale) ||0);
 
 		var worldCoordinateNewCenter = new google.maps.Point(
 			worldCoordinateCenter.x - pixelOffset.x,
@@ -475,7 +475,7 @@ AppViewModel = function() {
 		addressitems.push(data.location.city + " " + data.location.state_code + ", " + data.location.postal_code);
 
 		// build an array of place categories
-		var length = data.categories.length;
+		length = data.categories.length;
 		for (i = 0; i < length; i++) {
 			var categoryString = data.categories[i][0];
 			if (i != (data.categories.length) - 1) {

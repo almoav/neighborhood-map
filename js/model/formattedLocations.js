@@ -1,7 +1,6 @@
 // master list scraped from The LA Beat:
 // http://thelosangelesbeat.com/2015/05/offbeat-l-a-the-oldest-surviving-los-angeles-restaurants-a-master-list-of-the-vintage-historic-and-old-school/
 var formattedLocations = [
-{"name":"Fair Oaks Pharmacy & Soda Fountain","year":1905,"location":{lat:34.1160867, lng:-118.1505986},"place_id":"ChIJc7-nM4zEwoARM9rL4WPU3Bg","address":"1526 Mission Street, South Pasadena, CA 91030, USA","link":"http://www.scvhistory.com/scvhistory/sauguscafe.html"},
 {"name":"Watson Drugs & Soda Fountain","year":1915,"location":{lat:33.7876539, lng:-117.8523009},"place_id":"ChIJVRxPBefZ3IAR4JJ0yIHn7FM","address":"116 East Chapman Avenue, Orange, CA 92866, USA","link":"http://www.watsonsdrugs.com/history.htm"},
 {"name":"Phillipe the Original","year":1908,"location":{lat:34.059721, lng:-118.237025},"place_id":"ChIJd9NcMVvGwoARy9g0fZrtwB4","address":"1001 North Alameda Street, Los Angeles, CA 90012, USA","link":"http://www.philippes.com/philippes-history.html"},
 {"name":"Cole's","year":1908,"location":{lat:34.0448419, lng:-118.2495248},"place_id":"ChIJYZ3CoTXGwoARM5E3AL0U7Ks","address":"118 East 6th Street, Los Angeles, CA 90014, USA","link":"http://en.wikipedia.org/wiki/Cole%27s_Pacific_Electric_Buffet"},
