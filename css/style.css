@@ -1,31 +1,79 @@
 .header {
 	margin-left: auto;
+	float: left;
+	width: 100%;
 }
 .title {
 	float: left;
 	margin-left: 2%;
 	margin-bottom: 1%;
+	max-width: 48%;
+	max-height: 10%;
 }
+
 
 .search {
 	float: right;
 	margin-right: 2%;
 	margin-top: 1%;
 	margin-bottom: 1%;
+	max-width: 48%;
 }
 
 
 .mapView {
-	height: 600px;
-	width: 94vw;
+	height: 82vh;
+	width: 100%;
 	margin-left: auto;
 	margin-right: auto;
-	padding-bottom: 5%;
 }
 
 .sidebar {
 	color: black;
 }
+
+.truncate {
+	width: 25px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+html {
+	font-size: 14px;
+}
+@media (max-width: 900px) {
+	html { font-size: 16px; }
+}
+@media (max-width: 400px) {
+	html { font-size: 12px; }
+}
+
+/* Type will scale with document */
+.appName {
+	font-size: 2rem;
+	margin-top: 1%;
+	margin-bottom: 0;
+}
+.appSecondName {
+	font-size: 1.5rem;
+}
+.appSubName {
+	font-size: 1.2rem;
+	margin-top: 0;
+	margin-bottom: 2%;
+}
+
+/* Speeds for opening */
+accordionUpSpeed: 400,
+accordionDownSpeed: 400,
+collapseSpeed: 400,
+/* Default pane open, if any */
+contentOpen: 0,
+/* Classes for dropdown arrow */
+arrowRclass: 'arrow-r',
+arrowDclass: 'arrow-d',
+animate: true
 
 a {
 	cursor: pointer;

@@ -271,6 +271,14 @@ AppViewModel = function() {
 		*/
 		var offsetx = 0;
 		var offsety = -150;
+
+		// if the sidebar is active, scoot the info window over
+		// in x
+		if( $("#wrapper").attr("class") === "toggled" ) {
+			offsetx = 100;
+		}
+
+
 		var latlng = new google.maps.LatLng(
 			self.currentPlace().location().lat,
 			self.currentPlace().location().lng
